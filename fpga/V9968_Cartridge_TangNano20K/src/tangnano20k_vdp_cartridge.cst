@@ -1,11 +1,11 @@
-//Copyright (C)2014-2025 Gowin Semiconductor Corporation.
+//Copyright (C)2014-2026 Gowin Semiconductor Corporation.
 //All rights reserved. 
 //File Title: Physical Constraints file
-//Tool Version: V1.9.11.02 (64-bit)
+//Tool Version: V1.9.12.03 (64-bit)
 //Part Number: GW2AR-LV18QN88C8/I7
 //Device: GW2AR-18
 //Device Version: C
-//Created Time: Tue 10 28 18:45:49 2025
+//Created Time: Mon 10 12 09:27:25 2026
 
 IO_LOC "tmds_clk_p" 33,34;
 IO_PORT "tmds_clk_p" IO_TYPE=LVDS25 PULL_MODE=NONE DRIVE=3.5 BANK_VCCIO=3.3;
@@ -41,10 +41,12 @@ IO_LOC "slot_d[1]" 28;
 IO_PORT "slot_d[1]" IO_TYPE=LVTTL33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
 IO_LOC "slot_d[0]" 29;
 IO_PORT "slot_d[0]" IO_TYPE=LVTTL33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+IO_LOC "button[0]" 88;
+IO_PORT "button[0]" IO_TYPE=LVTTL33 PULL_MODE=DOWN BANK_VCCIO=3.3;
 IO_LOC "dipsw[1]" 52;
-IO_PORT "dipsw[1]" IO_TYPE=LVTTL33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_PORT "dipsw[1]" IO_TYPE=LVTTL33 PULL_MODE=DOWN BANK_VCCIO=3.3;
 IO_LOC "dipsw[0]" 53;
-IO_PORT "dipsw[0]" IO_TYPE=LVTTL33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_PORT "dipsw[0]" IO_TYPE=LVTTL33 PULL_MODE=DOWN BANK_VCCIO=3.3;
 IO_LOC "slot_a[7]" 17;
 IO_PORT "slot_a[7]" IO_TYPE=LVTTL33 PULL_MODE=UP BANK_VCCIO=3.3;
 IO_LOC "slot_a[6]" 49;
@@ -71,9 +73,7 @@ IO_LOC "slot_reset_n" 86;
 IO_PORT "slot_reset_n" IO_TYPE=LVTTL33 PULL_MODE=UP BANK_VCCIO=3.3;
 IO_LOC "clk14m" 80;
 IO_PORT "clk14m" IO_TYPE=LVTTL33 PULL_MODE=UP BANK_VCCIO=3.3;
-IO_LOC "button[0]" 88;
-IO_PORT "button[0]" IO_TYPE=LVTTL33 PULL_MODE=DOWN BANK_VCCIO=3.3;
-IO_LOC "button[1]" 87;
-IO_PORT "button[1]" IO_TYPE=LVTTL33 PULL_MODE=DOWN BANK_VCCIO=3.3;
 IO_LOC "clk" 4;
 IO_PORT "clk" IO_TYPE=LVTTL33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_LOC "button[1]" 87;
+IO_PORT "button[1]" IO_TYPE=LVTTL33 PULL_MODE=DOWN BANK_VCCIO=3.3;
