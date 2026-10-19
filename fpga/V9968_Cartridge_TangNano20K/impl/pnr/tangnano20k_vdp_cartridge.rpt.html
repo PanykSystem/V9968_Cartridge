@@ -83,7 +83,7 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 </tr>
 <tr>
 <td class="label">Created Time</td>
-<td>Mon Oct 12 13:54:54 2026
+<td>Sat Oct 17 18:37:09 2026
 </td>
 </tr>
 <tr>
@@ -97,24 +97,24 @@ table.detail_table th.label {  min-width: 8%; width: 8%; }
 <tr>
 <td class="label">Place & Route Process</td>
 <td>Running placement:
-   Placement Phase 0: CPU time = 0h 0m 3s, Elapsed time = 0h 0m 3s
-   Placement Phase 1: CPU time = 0h 0m 0.454s, Elapsed time = 0h 0m 0.454s
-   Placement Phase 2: CPU time = 0h 0m 9s, Elapsed time = 0h 0m 9s
-   Placement Phase 3: CPU time = 0h 0m 8s, Elapsed time = 0h 0m 8s
-   Total Placement: CPU time = 0h 0m 20s, Elapsed time = 0h 0m 20s
+   Placement Phase 0: CPU time = 0h 0m 6s, Elapsed time = 0h 0m 6s
+   Placement Phase 1: CPU time = 0h 0m 0.739s, Elapsed time = 0h 0m 0.739s
+   Placement Phase 2: CPU time = 0h 0m 16s, Elapsed time = 0h 0m 16s
+   Placement Phase 3: CPU time = 0h 0m 9s, Elapsed time = 0h 0m 9s
+   Total Placement: CPU time = 0h 0m 31s, Elapsed time = 0h 0m 31s
 Running routing:
-   Routing Phase 0: CPU time = 0h 0m 0.01s, Elapsed time = 0h 0m 0.01s
-   Routing Phase 1: CPU time = 0h 0m 0.551s, Elapsed time = 0h 0m 0.55s
+   Routing Phase 0: CPU time = 0h 0m 0.013s, Elapsed time = 0h 0m 0.013s
+   Routing Phase 1: CPU time = 0h 0m 0.848s, Elapsed time = 0h 0m 0.848s
    Routing Phase 2: CPU time = 0h 0m 28s, Elapsed time = 0h 0m 28s
    Routing Phase 3: CPU time = 0h 0m 0s, Elapsed time = 0h 0m 0s
    Total Routing: CPU time = 0h 0m 29s, Elapsed time = 0h 0m 29s
 Generate output files:
-   CPU time = 0h 0m 2s, Elapsed time = 0h 0m 2s
+   CPU time = 0h 0m 3s, Elapsed time = 0h 0m 3s
 </td>
 </tr>
 <tr>
 <td class="label">Total Time and Memory Usage</td>
-<td>CPU time = 0h 0m 51s, Elapsed time = 0h 0m 51s, Peak memory usage = 693MB</td>
+<td>CPU time = 0h 1m 3s, Elapsed time = 0h 1m 3s, Peak memory usage = 824MB</td>
 </tr>
 </table>
 <br/>
@@ -129,12 +129,12 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">Logic</td>
-<td>13130/20736</td>
-<td>64%</td>
+<td>14810/20736</td>
+<td>72%</td>
 </tr>
 <tr>
 <td class="label">&nbsp &nbsp --LUT,ALU,ROM16</td>
-<td>13034(10660 LUT, 2374 ALU, 0 ROM16)</td>
+<td>14714(12263 LUT, 2451 ALU, 0 ROM16)</td>
 <td>-</td>
 </tr>
 <tr>
@@ -144,8 +144,8 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">Register</td>
-<td>7863/15915</td>
-<td>50%</td>
+<td>7976/15915</td>
+<td>51%</td>
 </tr>
 <tr>
 <td class="label">&nbsp &nbsp --Logic Register as Latch</td>
@@ -154,7 +154,7 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">&nbsp &nbsp --Logic Register as FF</td>
-<td>7792/15552</td>
+<td>7905/15552</td>
 <td>51%</td>
 </tr>
 <tr>
@@ -169,8 +169,8 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">CLS</td>
-<td>9137/10368</td>
-<td>89%</td>
+<td>9353/10368</td>
+<td>91%</td>
 </tr>
 <tr>
 <td class="label">I/O Port</td>
@@ -204,8 +204,8 @@ Generate output files:
 </tr>
 <tr>
 <td class="label">BSRAM</td>
-<td>4 SP<br/>17 SDPB<br/>1 pROMX9<br/></td>
-<td>48%</td>
+<td>4 SP<br/>22 SDPB<br/>3 SDPX9B<br/>1 pROMX9<br/></td>
+<td>66%</td>
 </tr>
 <tr>
 <td class="label">DSP</td>
@@ -306,22 +306,22 @@ Generate output files:
 <tr>
 <td class="label">O_sdram_clk_d</td>
 <td>PRIMARY</td>
-<td> TR TL</td>
+<td> TR</td>
 </tr>
 <tr>
 <td class="label">clk42g</td>
 <td>PRIMARY</td>
-<td> TL BL</td>
+<td> TR TL BR BL</td>
 </tr>
 <tr>
 <td class="label">clk42m</td>
 <td>PRIMARY</td>
-<td> TL BR BL</td>
+<td> TR BR BL</td>
 </tr>
 <tr>
-<td class="label">u_v9968/w_h_count[0]</td>
+<td class="label">u_geo3d/u_engine/n28671_7</td>
 <td>PRIMARY</td>
-<td> BR BL</td>
+<td> TL BL</td>
 </tr>
 <tr>
 <td class="label">ff_reset_n2</td>
@@ -334,32 +334,32 @@ Generate output files:
 <td> -</td>
 </tr>
 <tr>
-<td class="label">ff_reset3_n2</td>
-<td>LW</td>
-<td> -</td>
-</tr>
-<tr>
 <td class="label">n18_6</td>
 <td>LW</td>
 <td> -</td>
 </tr>
 <tr>
-<td class="label">u_geo3d/u_engine/n26435_3</td>
+<td class="label">u_geo3d/rst_e</td>
 <td>LW</td>
 <td> -</td>
 </tr>
 <tr>
-<td class="label">u_geo3d/u_engine/fcur_87_9</td>
+<td class="label">u_geo3d/u_engine/z_core_addr_4_6</td>
 <td>LW</td>
 <td> -</td>
 </tr>
 <tr>
-<td class="label">u_geo3d/u_engine/n15513_9</td>
+<td class="label">u_geo3d/u_engine/fbuf_87_8</td>
 <td>LW</td>
 <td> -</td>
 </tr>
 <tr>
-<td class="label">u_v9968/u_command/ff_start</td>
+<td class="label">u_geo3d/u_engine/n28371_7</td>
+<td>LW</td>
+<td> -</td>
+</tr>
+<tr>
+<td class="label">u_v9968/u_timing_control/u_sprite/ff_active</td>
 <td>LW</td>
 <td> -</td>
 </tr>

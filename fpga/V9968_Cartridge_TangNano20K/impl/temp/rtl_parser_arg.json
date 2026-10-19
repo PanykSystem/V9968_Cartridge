@@ -136,11 +136,15 @@
         {
             "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/ws2812_led/ip_ws2812_led.v",
             "Type": "verilog"
+        },
+        {
+            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_z80if.v",
+            "Type": "verilog"
         }
     ],
     "IncludePath": [
     ],
-    "LoopLimit": 400000,
+    "LoopLimit": 99999999,
     "ResultFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/impl/temp/rtl_parser.result",
     "Top": "tangnano20k_vdp_cartridge",
     "VerilogStd": "verilog_2001",

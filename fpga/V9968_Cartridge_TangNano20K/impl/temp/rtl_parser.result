@@ -57,15 +57,15 @@
                 "SubInsts": [
                     {
                         "InstFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_bus.v",
-                        "InstLine": 121,
+                        "InstLine": 128,
                         "InstName": "u_engine",
                         "ModuleFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_engine.v",
-                        "ModuleLine": 99,
+                        "ModuleLine": 138,
                         "ModuleName": "geo3d_engine",
                         "SubInsts": [
                             {
                                 "InstFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_engine.v",
-                                "InstLine": 132,
+                                "InstLine": 175,
                                 "InstName": "u_core",
                                 "ModuleFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_core.v",
                                 "ModuleLine": 39,
@@ -330,6 +330,24 @@
                 "ModuleFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/debugger/ip_debugger.v",
                 "ModuleLine": 57,
                 "ModuleName": "ip_debugger"
+            }
+        ]
+    },
+    {
+        "InstFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_z80if.v",
+        "InstLine": 31,
+        "InstName": "geo3d_z80if",
+        "ModuleFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_z80if.v",
+        "ModuleLine": 31,
+        "ModuleName": "geo3d_z80if",
+        "SubInsts": [
+            {
+                "InstFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_z80if.v",
+                "InstLine": 53,
+                "InstName": "u_core",
+                "ModuleFile": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_core.v",
+                "ModuleLine": 39,
+                "ModuleName": "geo3d_core"
             }
         ]
     }

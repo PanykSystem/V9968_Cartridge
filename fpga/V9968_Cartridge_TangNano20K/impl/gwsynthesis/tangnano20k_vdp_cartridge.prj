@@ -38,16 +38,17 @@
         <File path="C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v" type="verilog"/>
         <File path="C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_vram_interface.v" type="verilog"/>
         <File path="C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\ws2812_led\ip_ws2812_led.v" type="verilog"/>
+        <File path="C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_z80if.v" type="verilog"/>
     </FileList>
     <OptionList>
         <Option type="disable_insert_pad" value="0"/>
         <Option type="dsp_style" value="auto"/>
         <Option type="global_freq" value="14.320"/>
-        <Option type="looplimit" value="400000"/>
+        <Option type="looplimit" value="99999999"/>
         <Option type="map_option" value="1"/>
         <Option type="max_fanout" value="1000"/>
         <Option type="netlist_hierarchy" value="1"/>
-        <Option type="opt_goal" value="auto"/>
+        <Option type="opt_goal" value="timing"/>
         <Option type="output_file" value="C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\impl\gwsynthesis\tangnano20k_vdp_cartridge.vg"/>
         <Option type="print_all_synthesis_warning" value="1"/>
         <Option type="ram_rw_check" value="1"/>
