@@ -10,6 +10,22 @@
             "Type": "verilog"
         },
         {
+            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_bus.v",
+            "Type": "verilog"
+        },
+        {
+            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_core.v",
+            "Type": "verilog"
+        },
+        {
+            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_engine.v",
+            "Type": "verilog"
+        },
+        {
+            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_z80if.v",
+            "Type": "verilog"
+        },
+        {
             "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/gowin_clkdiv/gowin_clkdiv.v",
             "Type": "verilog"
         },
@@ -35,18 +51,6 @@
         },
         {
             "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/tangnano20k_vdp_cartridge.v",
-            "Type": "verilog"
-        },
-        {
-            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_core.v",
-            "Type": "verilog"
-        },
-        {
-            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_engine.v",
-            "Type": "verilog"
-        },
-        {
-            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_bus.v",
             "Type": "verilog"
         },
         {
@@ -135,10 +139,6 @@
         },
         {
             "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/ws2812_led/ip_ws2812_led.v",
-            "Type": "verilog"
-        },
-        {
-            "Path": "C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/fpga/V9968_Cartridge_TangNano20K/src/geo3d/geo3d_z80if.v",
             "Type": "verilog"
         }
     ],
