@@ -18,13 +18,13 @@ main_rom_slot		:= 0xFCC1
 ;	input:
 ;		none
 ;	output:
-;		A ...... 0: TMS9918, 1: V9938, 2: V9958, 3: V9968, 4: V9978, 255: unknown
+;		A ...... 0: TMS9918, 1: V9938, 2: V9958, 3: V9968, 4: V9969, 255: unknown
 ;		C ...... VDP I/O Port#1 (unknown の場合は無意味な値)
 ;	break:
 ;		A, B, C, D, E, F
 ;	comment:
-;		本体の VDP が V9968/V9978 であるかを調べる
-;		R#21 は V9958/V9968/V9978 では bit0 (FID) を 0 に落とす。
+;		本体の VDP が V9968/V9969 であるかを調べる
+;		R#21 は V9958/V9968/V9969 では bit0 (FID) を 0 に落とす。
 ; =============================================================================
 			scope		check_vdp_type
 check_vdp_type::
@@ -75,18 +75,27 @@ check_vdp_type::
 			rrca
 			and			a, 0x1F
 			jr			z, is_v9938					; 0 なら V9938確定。
-			; FID=0 にして、V9958, V9968, V9978 を区別する
+			; Port#4 Unlock for V9968/V9969
+			inc			c
+			inc			c
+			inc			c
+			xor			a, a
+			out			[c], a
+			dec			c
+			dec			c
+			dec			c
+			; FID=0 にして、V9958, V9968, V9969 を区別する
 			ld			a, [rg21sav]
 			and			a, 0xFE						; FID=0
 			ld			[rg21sav], a
-			out			[c], a						; V9958 では無効。V9968/V9978 では FID=0
+			out			[c], a						; V9958 では無効。V9968/V9969 では FID=0
 			ld			a, 0x80 + 21
 			out			[c], a
 			; S#1 を読む
 			in			a, [c]						; S#1 を読む
 			; VDP-ID を取得
 			rrca
-			and			a, 0x1F						; 2: V9958, 3: V9968, 4: V9978
+			and			a, 0x1F						; 2: V9958, 3: V9968, 4: V9969
 			dec			a
 	is_v9938:
 			inc			a
@@ -118,13 +127,13 @@ check_vdp_type::
 ;	input:
 ;		none
 ;	output:
-;		A ...... 0: none, 1: V9938, 2: V9958, 3: V9968, 4: V9978
+;		A ...... 0: none, 1: V9938, 2: V9958, 3: V9968, 4: V9969
 ;		C ...... 0x89 (VDP I/O Port#1)
 ;	break:
 ;		A, B, C, D, E, F
 ;	comment:
 ;		2nd VDP の種類を調べる
-;		R#21 は V9938/V9958 では 0b00111010, V9968/V9978 では 0b00111011 になる
+;		R#21 は V9938/V9958 では 0b00111010, V9968/V9969 では 0b00111011 になる
 ;		ただし、一部の「データバスに PullUp が付いていない機種」で誤認する場合が
 ;		有り得る
 ;		割り込みは停止状態(IE0, IE1 = 0) である前提
