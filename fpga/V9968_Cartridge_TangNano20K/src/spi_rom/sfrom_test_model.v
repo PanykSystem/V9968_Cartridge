@@ -27,7 +27,8 @@ module sfrom_test_model #(
 	parameter	SECTOR_SIZE		= 4*1024,			// 4KB
 	parameter	BLOCK32_SIZE	= 32*1024,			// 32KB
 	parameter	BLOCK64_SIZE	= 64*1024,			// 64KB
-	parameter	INIT_FILE		= ""				// Optional initialization file
+	parameter	INIT_FILE		= "",				// Optional initialization file
+	parameter	OUTPUT_DELAY	= 0
 )(
 	input			spi_clk,
 	input			spi_cs_n,
@@ -131,7 +132,7 @@ module sfrom_test_model #(
 
 	// Tri-state control
 	assign spi_io[0] = quad_output_en ? io_out_reg[0] : 1'bz;
-	assign spi_io[1] = quad_output_en ? io_out_reg[1] : (quad_input_mode ? 1'bz : miso_reg);
+	assign #(OUTPUT_DELAY) spi_io[1] = quad_output_en ? io_out_reg[1] : (quad_input_mode ? 1'bz : miso_reg);
 	assign spi_io[2] = quad_output_en ? io_out_reg[2] : 1'bz;
 	assign spi_io[3] = quad_output_en ? io_out_reg[3] : 1'bz;
 

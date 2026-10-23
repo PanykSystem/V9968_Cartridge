@@ -122,6 +122,7 @@ module ip_spi_rom(
 	reg				ff_xfer_rdata_en;
 	reg				ff_xfer_processing;
 	reg				ff_xfer_spi_accepted;
+	reg				ff_xfer_spi_accepted_d;
 
 	localparam	[4:0]	ST_SPI_IDLE				= 5'd0;
 	localparam	[4:0]	ST_SPI_STD_WRITE		= 5'd1;
@@ -152,7 +153,8 @@ module ip_spi_rom(
 	reg				ff_serial_reset_n0 = 1'b0;
 	reg				ff_serial_reset_n1 = 1'b0;
 	reg				ff_spi_processing;
-	reg				ff_spi_ce;
+	reg		[1:0]	ff_spi_div;
+	wire			ff_spi_ce = (ff_spi_div == 2'd3);
 	reg		[4:0]	ff_spi_state;
 	reg		[2:0]	ff_spi_substate;
 	reg				ff_spi_clk;
@@ -898,10 +900,12 @@ module ip_spi_rom(
 		if( !reset_n ) begin
 			ff_xfer_processing		<= 1'b0;
 			ff_xfer_spi_accepted	<= 1'b0;
+			ff_xfer_spi_accepted_d <= 1'b0;
 		end
 		else begin
 			ff_xfer_processing		<= ff_spi_processing;
 			ff_xfer_spi_accepted	<= ff_xfer_processing;
+			ff_xfer_spi_accepted_d <= ff_xfer_spi_accepted;
 		end
 	end
 
@@ -910,7 +914,7 @@ module ip_spi_rom(
 			ff_xfer_rdata		<= 8'd0;
 			ff_xfer_rdata_en	<= 1'b0;
 		end
-		else if( !ff_xfer_processing && ff_xfer_spi_accepted ) begin
+		else if( !ff_xfer_spi_accepted && ff_xfer_spi_accepted_d ) begin
 			ff_xfer_rdata		<= ff_spi_rdata;
 			ff_xfer_rdata_en	<= ~ff_xfer_write;
 		end
@@ -959,24 +963,23 @@ module ip_spi_rom(
 			end
 		end
 		else begin
-			if( ff_spi_state == ST_SPI_FINISH ) begin
+			if( ff_spi_state == ST_SPI_FINISH && ff_spi_ce ) begin
 				ff_spi_processing <= 1'b0;
 			end
 		end
 	end
 
-	//	Advance SPI transfer states every other clk_serial edge.
-	//	This makes srom_clk frequency one quarter of clk_serial while keeping
-	//	the existing high/low state sequencing unchanged.
+	//	Allow an 18.6ns half-cycle for Flash output delay and board I/O delay.
+	//	SPI clock = clk_serial / 8 (26.85MHz at clk215m).
 	always @( posedge clk_serial ) begin
 		if( !ff_serial_reset_n1 ) begin
-			ff_spi_ce <= 1'b0;
+			ff_spi_div <= 2'd0;
 		end
 		else if( ff_spi_processing ) begin
-			ff_spi_ce <= ~ff_spi_ce;
+			ff_spi_div <= ff_spi_div + 2'd1;
 		end
 		else begin
-			ff_spi_ce <= 1'b0;
+			ff_spi_div <= 2'd0;
 		end
 	end
 
@@ -1018,7 +1021,7 @@ module ip_spi_rom(
 				end
 				ST_SPI_STD_WRITE: begin
 					ff_spi_clk		<= 1'b0;
-					ff_spi_sio[0]	<= ff_spi_data[ff_spi_substate];
+					ff_spi_sio[0]	<= ff_spi_data[7];
 					ff_spi_sio[2]	<= 1'b1;
 					ff_spi_sio[3]	<= 1'b1;
 					ff_spi_hiz		<= 4'b0010;
@@ -1026,6 +1029,7 @@ module ip_spi_rom(
 				end
 				ST_SPI_STD_WRITE_CLK: begin
 					ff_spi_clk		<= 1'b1;
+					ff_spi_data		<= { ff_spi_data[6:0], 1'b0 };
 					if( ff_spi_substate != 3'd0 ) begin
 						ff_spi_substate	<= ff_spi_substate - 3'd1;
 						ff_spi_state	<= ST_SPI_STD_WRITE;
@@ -1047,7 +1051,7 @@ module ip_spi_rom(
 				end
 				ST_SPI_STD_READ_LOOP: begin
 					ff_spi_clk		<= 1'b0;
-					ff_spi_data[ff_spi_substate] <= w_srom_sio[1];
+					ff_spi_data <= { ff_spi_data[6:0], w_srom_sio[1] };
 					ff_spi_sio[2]	<= 1'b1;
 					ff_spi_sio[3]	<= 1'b1;
 					ff_spi_hiz		<= 4'b0011;

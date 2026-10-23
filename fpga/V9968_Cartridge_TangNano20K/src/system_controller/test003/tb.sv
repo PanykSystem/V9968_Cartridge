@@ -4,7 +4,9 @@
 //		43h-47h Config ROM Reader/Writer
 // --------------------------------------------------------------------
 
-module tb ();
+module tb #(
+	parameter FLASH_OUTPUT_DELAY = 12000
+) ();
 	reg test_passed = 0;
 	localparam		CLK_PERIOD			= 11640;	//	85.9MHz
 	localparam		CLK_SERIAL_PERIOD	= 4656;		//	214.8MHz
@@ -83,7 +85,9 @@ module tb ();
 		.srom_di				( flash_spi_io[0]		)
 	);
 
-	sfrom_test_model u_flash (
+	sfrom_test_model #(
+		.OUTPUT_DELAY			( FLASH_OUTPUT_DELAY	)
+	) u_flash (
 		.spi_clk				( flash_spi_clk			),
 		.spi_cs_n				( flash_spi_cs_n		),
 		.spi_io					( flash_spi_io			)
@@ -94,6 +98,12 @@ module tb ();
 	integer			mon_bits;
 	reg		[63:0]	mon_shift;
 	time			mon_cs_rise;
+	time			mon_clk_edge = 0;
+	integer			mon_programs = 0;
+	integer			mon_reads = 0;
+	reg		[7:0]	mon_command;
+	integer			page_programs;
+	integer			page_reads;
 	initial begin
 		mon_bits	= 0;
 		mon_shift	= 0;
@@ -111,10 +121,20 @@ module tb ();
 		if( !flash_spi_cs_n ) begin
 			mon_bits	= mon_bits + 1;
 			mon_shift	= { mon_shift[62:0], flash_spi_io[0] };
+			if( mon_bits == 8 ) mon_command = mon_shift[7:0];
 		end
+	end
+	always @( flash_spi_clk ) begin
+		if( reset_n && mon_clk_edge != 0 && ($time - mon_clk_edge) < 18000 ) begin
+			$display( "[ERROR] SPI half-cycle shorter than 18ns" );
+			errors = errors + 1;
+		end
+		mon_clk_edge = $time;
 	end
 	always @( posedge flash_spi_cs_n ) begin
 		mon_cs_rise = $time;
+		if( mon_bits >= 8 && mon_command == 8'h02 ) mon_programs = mon_programs + 1;
+		if( mon_bits >= 8 && mon_command == 8'h0B ) mon_reads = mon_reads + 1;
 		if( (mon_bits % 8) != 0 ) begin
 			$display( "[ERROR] SPI: frame of %0d bits (not byte aligned)", mon_bits );
 			errors = errors + 1;
@@ -371,8 +391,10 @@ module tb ();
 		expect_read( 8'h43, 8'h12, "address L" );
 		expect_read( 8'h44, 8'h34, "address M" );
 		expect_read( 8'h45, 8'h56, "address H" );
-		for( p = 8'h48; p <= 8'h4F; p = p + 1 ) expect_no_response( p[7:0], "reserved" );
-		stage_end( "function=01h: address registers, 48h-4Fh silent" );
+		for( p = 8'h4B; p <= 8'h4D; p = p + 1 ) expect_no_response( p[7:0], "reserved" );
+		expect_read( 8'h4F, 8'hA1, "page capability" );
+		expect_read( 8'h4E, 8'h00, "initial page result" );
+		stage_end( "function=01h: address and page registers, reserved silent" );
 
 		//	---- ROM read ----
 		stage_begin;
@@ -406,10 +428,74 @@ module tb ();
 			$display( "[ERROR] block erase touched outside 200000h-20FFFFh" );
 			errors = errors + 1;
 		end
-		io_write( 8'h46, 8'h05 );
+		io_write( 8'h46, 8'h07 );
 		expect_read( 8'h42, 8'hFE, "reserved command ignored" );
 		rom_read( 24'h123456, 8'hA5, "ROM read after status commands" );
 		stage_end( "ROM write / sector(64KB block) erase commands" );
+
+		stage_begin;
+		io_write( 8'h4A, 8'h00 );
+		for( p = 0; p < 256; p = p + 1 ) io_write( 8'h48, p[7:0] ^ 8'hA5 );
+		expect_read( 8'h4A, 8'h00, "buffer index wraps" );
+		io_write( 8'h49, 8'hFF );
+		set_rom_address( 24'h220000 );
+		page_programs = mon_programs;
+		io_write( 8'h46, 8'h05 );
+		rom_wait_ready( "page program 256" );
+		expect_read( 8'h4E, 8'h00, "page program accepted" );
+		if( mon_programs != page_programs + 1 ) $fatal( 1, "Page was not one Program frame" );
+		for( p = 0; p < 256; p = p + 1 ) begin
+			if( u_flash.memory[24'h220000 + p] !== (p[7:0] ^ 8'hA5) )
+				$fatal( 1, "Page memory mismatch at offset %0d", p );
+		end
+		// Destroy the CPU buffer before reading back from the Flash.
+		for( p = 0; p < 256; p = p + 1 ) io_write( 8'h48, 8'h00 );
+		io_write( 8'h47, 8'h73 );
+		page_reads = mon_reads;
+		io_write( 8'h46, 8'h06 );
+		expect_read( 8'h4E, 8'h00, "page read accepted" );
+		if( mon_reads != page_reads + 1 ) $fatal( 1, "Page read was not one Fast Read frame" );
+		io_write( 8'h4A, 8'h00 );
+		for( p = 0; p < 256; p = p + 1 ) expect_read( 8'h48, p[7:0] ^ 8'hA5, "page read buffer" );
+		expect_read( 8'h47, 8'h73, "page read preserves legacy data" );
+		expect_read( 8'h43, 8'h00, "page address unchanged L" );
+		expect_read( 8'h44, 8'h00, "page address unchanged M" );
+		expect_read( 8'h45, 8'h22, "page address unchanged H" );
+
+		set_rom_address( 24'h2200FF );
+		io_write( 8'h49, 8'h01 );
+		page_programs = mon_programs;
+		page_reads = mon_reads;
+		io_write( 8'h46, 8'h05 );
+		expect_read( 8'h4E, 8'h01, "cross-page program rejected" );
+		io_write( 8'h46, 8'h06 );
+		expect_read( 8'h4E, 8'h01, "cross-page read rejected" );
+		if( mon_programs != page_programs || mon_reads != page_reads )
+			$fatal( 1, "Rejected command touched Flash" );
+
+		// Nonaligned partial page ending at FFh and a one-byte next page.
+		set_rom_address( 24'h22FFF3 );
+		io_write( 8'h49, 8'd12 );
+		io_write( 8'h4A, 8'h00 );
+		for( p = 0; p < 13; p = p + 1 ) io_write( 8'h48, p[7:0] + 8'h31 );
+		io_write( 8'h46, 8'h05 );
+		rom_wait_ready( "partial page program" );
+		expect_read( 8'h4E, 8'h00, "valid page clears rejection" );
+		io_write( 8'h46, 8'h06 );
+		io_write( 8'h4A, 8'h00 );
+		for( p = 0; p < 13; p = p + 1 ) expect_read( 8'h48, p[7:0] + 8'h31, "partial page read" );
+		rom_read( 24'h22FFF2, 8'hFF, "partial page preceding byte intact" );
+		rom_read( 24'h230000, 8'hFF, "partial page following byte intact" );
+		set_rom_address( 24'h230000 );
+		io_write( 8'h49, 8'h00 );
+		io_write( 8'h4A, 8'h00 );
+		io_write( 8'h48, 8'h69 );
+		io_write( 8'h46, 8'h05 );
+		rom_wait_ready( "one byte page program" );
+		io_write( 8'h46, 8'h06 );
+		io_write( 8'h4A, 8'h00 );
+		expect_read( 8'h48, 8'h69, "one byte page read" );
+		stage_end( "page transfers: 256 bytes, partial, boundary rejection, single byte" );
 
 		stage_begin;
 		io_write( 8'h46, 8'h03 );

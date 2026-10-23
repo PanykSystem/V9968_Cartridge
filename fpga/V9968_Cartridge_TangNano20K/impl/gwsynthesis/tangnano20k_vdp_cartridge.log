@@ -61,6 +61,7 @@ WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users
 WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":131)
 WARN  (EX3791) : Expression size 36 truncated to fit in target size 18("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":1224)
 Compiling module 'system_controller'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v":58)
+Extracting RAM for identifier 'ff_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v":138)
 Compiling module 'ip_spi_rom'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\spi_rom\ip_spi_rom.v":27)
 Compiling module 'vdp'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp.v":58)
 Compiling module 'vdp_cpu_interface'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_cpu_interface.v":58)

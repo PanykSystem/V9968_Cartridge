@@ -15,7 +15,9 @@ VERSION_ADDRESS = 0x7DFF00
 class Updater:
     def __init__(self, args="", image=None, *, device=1, file_size=None,
                  erase_accepted=True, erase_blank=True, corrupt_write=False,
-                 short_read=False, stuck_busy=False, controller_timeout=False):
+                 short_read=False, stuck_busy=False, controller_timeout=False,
+                 page_capable=False, page_result_failure=False,
+                 corrupt_address=None, controller_timeout_command=None):
         self.cpu = Z80Machine()
         self.cpu.set_memory_block(0x100, (ROOT / "V9968UPD.COM").read_bytes())
         tail = args.encode("ascii")
@@ -35,6 +37,11 @@ class Updater:
         self.short_read = short_read
         self.stuck_busy = stuck_busy
         self.controller_timeout = controller_timeout
+        self.controller_timeout_command = controller_timeout_command
+        self.pending_command = None
+        self.page_capable = page_capable
+        self.page_result_failure = page_result_failure
+        self.corrupt_address = corrupt_address
         self.flash = bytearray(b"\xFF") * 0x800000
         self.flash[VERSION_ADDRESS:VERSION_ADDRESS + 16] = b"old".ljust(16, b"\0")
         self.flash[0x7DFF10:0x7DFF20] = b"\x55" * 16
@@ -46,8 +53,14 @@ class Updater:
         self.busy = 0
         self.pending = 0
         self.result = 0
+        self.page_buffer = bytearray(b"\xFF") * 256
+        self.page_index = 0
+        self.page_length = 1
+        self.page_result = 0
         self.erases = []
         self.writes = []
+        self.program_ops = []
+        self.read_transactions = []
         self.output = []
         self.closed = False
         self.opened_name = None
@@ -66,14 +79,22 @@ class Updater:
             self.address = (self.address & ~(0xFF << shift)) | (value << shift)
         elif port == 0x47:
             self.data = value
+        elif port == 0x48:
+            self.page_buffer[self.page_index] = value
+            self.page_index = (self.page_index + 1) & 0xFF
+        elif port == 0x49:
+            self.page_length = value + 1
+        elif port == 0x4A:
+            self.page_index = value
         elif port == 0x46:
             assert self.enabled and self.selected and self.function
             self.pending = 1
+            self.pending_command = value
             if value == 0:
                 self.result = self.flash[self.address]
             elif value == 1:
                 self.writes.append(self.address)
-                if not self.corrupt_write:
+                if not self.corrupt_write and self.address != self.corrupt_address:
                     self.flash[self.address] &= self.data
                 self.busy = 2
             elif value == 2:
@@ -86,6 +107,26 @@ class Updater:
             elif value == 4:
                 self.result = int(self.busy > 0 or self.stuck_busy)
                 self.busy = max(0, self.busy - 1)
+            elif value in (5, 6):
+                assert self.page_capable, "Page command sent to a legacy FPGA"
+                self.page_result = 0
+                crosses_page = (self.address & 0xFF) + self.page_length - 1 > 0xFF
+                if (self.page_result_failure is True or
+                        self.page_result_failure == value or crosses_page):
+                    self.page_result = 1
+                elif value == 5:
+                    self.program_ops.append((self.address, self.page_length))
+                    if not self.corrupt_write:
+                        for offset in range(self.page_length):
+                            address = self.address + offset
+                            if address != self.corrupt_address:
+                                self.flash[address] &= self.page_buffer[offset]
+                    self.busy = 2
+                else:
+                    self.read_transactions.append((self.address, self.page_length))
+                    self.page_buffer[:self.page_length] = self.flash[
+                        self.address:self.address + self.page_length]
+                self.pending = 1
             else:
                 raise AssertionError(f"Unexpected command {value}")
 
@@ -93,7 +134,8 @@ class Updater:
         port &= 0xFF
         if port == 0x40:
             if self.pending:
-                if not self.controller_timeout:
+                if (not self.controller_timeout and
+                        self.pending_command != self.controller_timeout_command):
                     self.pending -= 1
                 return 0xFF
             return 0x7F if self.enabled else 0xFF
@@ -104,6 +146,15 @@ class Updater:
         if port == 0x47:
             assert not self.pending, "Data read before controller completion"
             return self.result
+        if port == 0x48:
+            assert not self.pending, "Page data read before controller completion"
+            value = self.page_buffer[self.page_index]
+            self.page_index = (self.page_index + 1) & 0xFF
+            return value
+        if port == 0x4E:
+            return self.page_result
+        if port == 0x4F:
+            return 0xA1 if self.page_capable else 0xFF
         raise AssertionError(f"Unexpected input port {port:02X}")
 
     def bdos(self):
@@ -190,6 +241,96 @@ class UpdaterTests(unittest.TestCase):
         self.assertTrue(all(a < len(body) or VERSION_ADDRESS <= a < VERSION_ADDRESS + 16
                             for a in app.writes))
         self.assertTrue(app.closed)
+        self.assertIn("Mode    : Legacy byte", "".join(app.output))
+
+    def test_page_mode_programs_partial_pages_and_reports_mode(self):
+        body = b"\x41\xFF\x5A"
+        app = Updater("V9968CFG.BIN", self.image(body), page_capable=True)
+        text = app.run()
+        self.assertIn("Mode    : Page accelerated", text)
+        self.assertIn("Config data has been updated.", text)
+        self.assertEqual(app.flash[:len(body)], body)
+        self.assertEqual(app.program_ops, [(0, 3), (VERSION_ADDRESS, 16)])
+        self.assertEqual(app.read_transactions, [(0, 3), (VERSION_ADDRESS, 16)])
+        self.assertEqual(len(app.program_ops), 2)
+        legacy = Updater("V9968CFG.BIN", self.image(body))
+        legacy.run()
+        self.assertEqual(len(legacy.writes), 2 + sum(value != 0xFF for value in VERSION))
+        self.assertLess(len(app.program_ops), len(legacy.writes))
+
+    def test_page_boundaries_and_program_count(self):
+        for size in (1, 255, 256, 257, 0x4000, 0x10000, 0x10001):
+            with self.subTest(size=size):
+                body = bytearray(b"\xFF") * size
+                body[0] = 0x41
+                body[-1] = 0x5A
+                app = Updater("V9968CFG.BIN", self.image(body), page_capable=True)
+                self.assertIn("Config data has been updated.", app.run())
+                self.assertEqual(app.flash[:size], body)
+                expected_pages = (size + 255) // 256
+                body_programs = 1 if size <= 256 else 2
+                self.assertEqual(len(app.program_ops), body_programs + 1)
+                self.assertEqual(len(app.read_transactions), expected_pages + 1)
+                for address, length in app.program_ops[:-1]:
+                    self.assertLessEqual((address & 0xFF) + length, 256)
+
+    def test_dense_page_program_reduction(self):
+        body = bytes(index % 255 for index in range(0x10001))
+        app = Updater("V9968CFG.BIN", self.image(body), page_capable=True)
+        self.assertIn("Config data has been updated.", app.run())
+        self.assertEqual(app.flash[:len(body)], body)
+        self.assertEqual(app.program_ops[:-1],
+                         [(address, min(256, len(body) - address))
+                          for address in range(0, len(body), 256)])
+        self.assertEqual(len(app.read_transactions), 258)
+        legacy = Updater("V9968CFG.BIN", self.image(body[:256]))
+        self.assertIn("Config data has been updated.", legacy.run())
+        self.assertEqual(sum(address < 256 for address in legacy.writes), 256)
+        self.assertEqual(app.program_ops[0], (0, 256))
+
+    def test_page_command_failures_are_reported(self):
+        for command, message in (
+                (5, "Write error"),
+                (6, "ConfigROM read error")):
+            with self.subTest(command=command):
+                app = Updater("V9968CFG.BIN", self.image(b"\x41"),
+                              page_capable=True,
+                              controller_timeout_command=command)
+                self.assertIn(message, app.run())
+                self.assertNotIn(0x7D0000, app.erases)
+        app = Updater("V9968CFG.BIN", self.image(b"\x41"),
+                      page_capable=True, page_result_failure=6)
+        self.assertIn("Page transfer rejected (result=01h).", app.run())
+        self.assertNotIn(0x7D0000, app.erases)
+
+    def test_page_result_failure_and_corruption_keep_version(self):
+        app = Updater("V9968CFG.BIN", self.image(b"\x41"),
+                      page_capable=True, page_result_failure=True)
+        text = app.run()
+        self.assertIn("Page transfer rejected (result=01h).", text)
+        self.assertNotIn(0x7D0000, app.erases)
+        self.assertEqual(app.flash[VERSION_ADDRESS:VERSION_ADDRESS + 16],
+                         b"old".ljust(16, b"\0"))
+
+        body = bytearray(b"\xFF") * 0x4001
+        body[0x4000] = 0x42
+        app = Updater("V9968CFG.BIN", self.image(body), page_capable=True,
+                      corrupt_address=0x4000)
+        text = app.run()
+        self.assertIn(
+            "Verify error at 004000h: expected 42h, read FFh (last SR1=00h).",
+            text)
+        self.assertEqual(app.flash[VERSION_ADDRESS:VERSION_ADDRESS + 16],
+                         b"old".ljust(16, b"\0"))
+
+        app = Updater("V9968CFG.BIN", self.image(b"\x41"),
+                      page_capable=True, corrupt_write=True)
+        text = app.run()
+        self.assertIn(
+            "Verify error at 000000h: expected 41h, read FFh (last SR1=00h).",
+            text)
+        self.assertEqual(app.flash[VERSION_ADDRESS:VERSION_ADDRESS + 16],
+                         b"old".ljust(16, b"\0"))
 
     def test_invalid_images_do_not_erase(self):
         cases = [

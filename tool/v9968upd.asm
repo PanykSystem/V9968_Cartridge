@@ -56,6 +56,11 @@ SC_ADDRESS_M	:= 0x44
 SC_ADDRESS_H	:= 0x45
 SC_COMMAND		:= 0x46
 SC_DATA			:= 0x47
+SC_PAGE_DATA	:= 0x48
+SC_PAGE_LENGTH	:= 0x49
+SC_PAGE_INDEX	:= 0x4A
+SC_PAGE_RESULT	:= 0x4E
+SC_CAPABILITY	:= 0x4F
 
 SC_ENABLE_KEY	:= 0x80
 SC_ENABLED		:= 0x7F			; ~SC_ENABLE_KEY
@@ -68,6 +73,10 @@ CMD_READ		:= 0x00
 CMD_WRITE		:= 0x01
 CMD_ERASE		:= 0x02			; 64KB block erase
 CMD_STATUS		:= 0x04			; bit0: BUSY
+CMD_PAGE_WRITE	:= 0x05
+CMD_PAGE_READ	:= 0x06
+
+PAGE_CAPABILITY	:= 0xA1
 
 ; -----------------------------------------------------------------------------
 ;	Constants
@@ -114,6 +123,23 @@ skip_usage:
 			ld		de, not_detected_message
 			jp		c, puts_and_exit
 
+			ld		a, [mode]
+			cp		a, MODE_CONFIG
+			jr		nz, skip_mode_message
+			in		a, [SC_CAPABILITY]
+			cp		a, PAGE_CAPABILITY
+			jr		nz, legacy_mode
+			ld		a, 1
+			ld		[page_mode], a
+			ld		de, page_mode_message
+			call	puts
+			jr		skip_mode_message
+legacy_mode:
+			xor		a, a
+			ld		[page_mode], a
+			ld		de, legacy_mode_message
+			call	puts
+skip_mode_message:
 			ld		a, [mode]
 			cp		a, MODE_CONFIG
 			jp		z, update_config
@@ -361,8 +387,8 @@ set_chunk:
 			ld		[chunk_address + 2], a
 			ld		hl, BUFFER
 			ld		bc, [chunk_size]
-			call	write_bytes
 			ld		de, write_error_message
+			call	write_bytes
 			ret		c
 
 			; verify
@@ -506,10 +532,16 @@ not_blank:
 ; break:
 ;    all
 ; comment:
-;    FFh is skipped because the erased ConfigROM is already FFh.
+;    Uses page programming when supported, otherwise the legacy byte path.
 ; -----------------------------------------------------------------------------
 			scope	write_bytes
 write_bytes::
+			ld		a, [page_mode]
+			or		a, a
+			jp		nz, write_page_bytes
+			jp		write_legacy_bytes
+
+write_legacy_bytes:
 			ld		a, [hl]
 			cp		a, 0xFF
 			jr		z, skip
@@ -538,6 +570,86 @@ skip:
 			ret									; Cf = 0 (or a, c)
 			endscope
 
+; -------------------------------------------------------------------------
+; write_page_bytes
+;    Programs source bytes in 256-byte Flash pages. FFh bytes are included
+;    in programmed pages; entirely-FF pages are omitted.
+; -------------------------------------------------------------------------
+			scope	write_page_bytes
+write_page_bytes::
+			ld		[bytes_remaining], bc
+page_loop:
+			ld		bc, [bytes_remaining]
+			call	select_page_length
+			ld		a, 1
+			ld		[page_blank], a
+			ld		a, 0
+			out		[SC_PAGE_INDEX], a
+			ld		de, [page_length]
+copy_page:
+			ld		a, [hl]
+			out		[SC_PAGE_DATA], a
+			cp		a, 0xFF
+			jr		z, page_byte_ready
+			xor		a, a
+			ld		[page_blank], a
+page_byte_ready:
+			inc		hl
+			dec		de
+			ld		a, d
+			or		a, e
+			jr		nz, copy_page
+
+			ld		a, [page_length]
+			dec		a
+			out		[SC_PAGE_LENGTH], a
+			ld		a, [page_blank]
+			or		a, a
+			jr		nz, page_advance
+
+			call	out_cur_address
+			ld		a, CMD_PAGE_WRITE
+			ld		de, write_error_message
+			call	sc_exec
+			ret		c
+			in		a, [SC_PAGE_RESULT]
+			or		a, a
+			jr		nz, page_rejected
+			call	rom_wait_ready
+			jr		nc, page_advance
+			ld		de, write_error_message
+			scf
+			ret
+
+page_advance:
+			ld		bc, [page_length]
+			push	hl
+			ld		hl, [cur_address]
+			add		hl, bc
+			ld		[cur_address], hl
+			jr		nc, address_advanced
+			ld		a, [cur_address + 2]
+			inc		a
+			ld		[cur_address + 2], a
+address_advanced:
+			ld		hl, [bytes_remaining]
+			or		a, a
+			sbc		hl, bc
+			ld		[bytes_remaining], hl
+			pop		hl
+			ld		a, [bytes_remaining]
+			ld		b, a
+			ld		a, [bytes_remaining + 1]
+			or		a, b
+			jr		nz, page_loop
+			ret
+
+page_rejected:
+			ld		de, page_transfer_error_message
+			scf
+			ret
+			endscope
+
 ; -----------------------------------------------------------------------------
 ; verify_bytes
 ; input:
@@ -552,6 +664,10 @@ skip:
 ; -----------------------------------------------------------------------------
 			scope	verify_bytes
 verify_bytes::
+			ld		a, [page_mode]
+			or		a, a
+			jp		nz, verify_page_bytes
+verify_legacy_bytes:
 			call	out_cur_address
 			call	rom_read_byte
 			ld		de, read_rom_error_message
@@ -566,6 +682,7 @@ verify_bytes::
 			jr		nz, verify_bytes
 			ret									; Cf = 0 (or a, c)
 
+verify_mismatch::
 mismatch:
 			ld		[verify_actual], a
 			ld		a, [hl]
@@ -587,6 +704,101 @@ mismatch:
 			call	puthex8
 			ld		de, verify_end_message
 			scf
+			ret
+			endscope
+
+; -------------------------------------------------------------------------
+; verify_page_bytes
+;    Reads one Flash page at a time into the controller buffer and compares
+;    every requested byte against the expected source data.
+; -------------------------------------------------------------------------
+			scope	verify_page_bytes
+verify_page_bytes::
+			ld		[bytes_remaining], bc
+verify_page_loop:
+			ld		bc, [bytes_remaining]
+			call	select_page_length
+			ld		a, [page_length]
+			dec		a
+			out		[SC_PAGE_LENGTH], a
+			call	out_cur_address
+			ld		a, CMD_PAGE_READ
+			ld		de, read_rom_error_message
+			call	sc_exec
+			jr		c, verify_page_return
+			in		a, [SC_PAGE_RESULT]
+			or		a, a
+			jr		nz, verify_page_rejected
+			xor		a, a
+			out		[SC_PAGE_INDEX], a
+			ld		de, [page_length]
+verify_page_compare:
+			in		a, [SC_PAGE_DATA]
+			cp		a, [hl]
+			jr		nz, verify_page_mismatch
+			inc		hl
+			call	inc_cur_address
+			dec		de
+			ld		a, d
+			or		a, e
+			jr		nz, verify_page_compare
+			push	hl
+			ld		bc, [page_length]
+			ld		hl, [bytes_remaining]
+			or		a, a
+			sbc		hl, bc
+			ld		[bytes_remaining], hl
+			pop		hl
+			ld		a, [bytes_remaining]
+			ld		b, a
+			ld		a, [bytes_remaining + 1]
+			or		a, b
+			jr		nz, verify_page_loop
+			or		a, a
+			ret
+
+verify_page_mismatch:
+			jp		verify_mismatch
+verify_page_return:
+			ret
+
+verify_page_rejected:
+			ld		de, page_transfer_error_message
+			scf
+			ret
+			endscope
+
+; -------------------------------------------------------------------------
+; select_page_length
+;    Input BC is remaining byte count. Output page_length is the smaller
+;    of BC and the number of bytes to the next 256-byte Flash boundary.
+; -------------------------------------------------------------------------
+			scope	select_page_length
+select_page_length::
+			ld		a, [cur_address]
+			or		a, a
+			jr		z, full_page_room
+			cpl
+			inc		a
+			ld		[page_length], a
+			xor		a, a
+			ld		[page_length + 1], a
+			jr		compare_page_room
+full_page_room:
+			ld		a, 0
+			ld		[page_length], a
+			ld		a, 1
+			ld		[page_length + 1], a
+compare_page_room:
+			ld		de, [page_length]
+			push	hl
+			ld		h, b
+			ld		l, c
+			or		a, a
+			sbc		hl, de
+			pop		hl
+			ret		nc
+			ld		[page_length], bc
 			ret
 			endscope
 
@@ -618,8 +830,8 @@ update_version::
 			call	set_version_address
 			ld		hl, version_buffer
 			ld		bc, VERSION_SIZE
-			call	write_bytes
 			ld		de, write_error_message
+			call	write_bytes
 			ret		c
 
 			call	set_version_address
@@ -1238,6 +1450,12 @@ usage_message:
 not_detected_message:
 			ds		"V9968 Cartridge is not detected.\r\n"
 			db		0
+page_mode_message:
+			ds		"Mode    : Page accelerated\r\n"
+			db		0
+legacy_mode_message:
+			ds		"Mode    : Legacy byte\r\n"
+			db		0
 config_version_message:
 			ds		"Cfg. Ver: "
 			db		0
@@ -1282,6 +1500,9 @@ erase_error_message:
 			db		0
 write_error_message:
 			ds		"\r\nWrite error.\r\n"
+			db		0
+page_transfer_error_message:
+			ds		"\r\nPage transfer rejected (result=01h).\r\n"
 			db		0
 verify_error_message:
 			ds		"\r\nVerify error at "
@@ -1330,6 +1551,8 @@ config_signature:
 ; -----------------------------------------------------------------------------
 mode:
 			db		0
+page_mode:
+			db		0
 file_opened:
 			db		0
 start_block:
@@ -1342,6 +1565,12 @@ remain_size:
 			db		0					; bit23-16
 chunk_size:
 			dw		0
+page_length:
+			dw		0
+bytes_remaining:
+			dw		0
+page_blank:
+			db		0
 cur_address:
 			db		0, 0, 0				; bit7-0, bit15-8, bit23-16
 chunk_address:

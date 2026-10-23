@@ -85,6 +85,11 @@ module system_controller#(
 	localparam		c_io_address_h			= 4'h5;		//	45h
 	localparam		c_io_command			= 4'h6;		//	46h
 	localparam		c_io_data				= 4'h7;		//	47h
+	localparam		c_io_buffer				= 4'h8;
+	localparam		c_io_length				= 4'h9;
+	localparam		c_io_index				= 4'hA;
+	localparam		c_io_result				= 4'hE;
+	localparam		c_io_capability			= 4'hF;
 
 	localparam		c_enable_key			= 8'h80;
 	localparam		c_function_rom			= 8'h01;	//	Config ROM Reader/Writer
@@ -94,6 +99,8 @@ module system_controller#(
 	localparam		c_command_sector_erase	= 8'h02;
 	localparam		c_command_all_erase		= 8'h03;
 	localparam		c_command_read_status	= 8'h04;
+	localparam		c_command_page_write	= 8'h05;
+	localparam		c_command_page_read		= 8'h06;
 
 	//	Config ROM Reader/Writer sequencer (issues ip_spi_rom command lists)
 	localparam	[2:0]	c_rs_idle				= 3'd0;
@@ -101,12 +108,14 @@ module system_controller#(
 	localparam	[2:0]	c_rs_gap				= 3'd2;
 	localparam	[2:0]	c_rs_read_wait			= 3'd3;
 	localparam	[2:0]	c_rs_finish				= 3'd4;
+	localparam	[2:0]	c_rs_buffer_next		= 3'd5;
 
 	localparam	[2:0]	c_src_const				= 3'd0;
 	localparam	[2:0]	c_src_address_l			= 3'd1;
 	localparam	[2:0]	c_src_address_m			= 3'd2;
 	localparam	[2:0]	c_src_address_h			= 3'd3;
 	localparam	[2:0]	c_src_data				= 3'd4;
+	localparam	[2:0]	c_src_buffer			= 3'd5;
 
 	reg				ff_enable;
 	reg				ff_devsel;
@@ -115,6 +124,7 @@ module system_controller#(
 	reg		[7:0]	ff_data;
 	reg		[7:0]	ff_rdata;
 	reg				ff_rdata_en;
+	reg				ff_rdata_buffer;
 	reg		[2:0]	ff_rom_state;
 	reg		[3:0]	ff_rom_step;
 	reg		[2:0]	ff_rom_command;
@@ -123,6 +133,48 @@ module system_controller#(
 	reg				ff_rom_bus_write;
 	reg		[7:0]	ff_rom_bus_wdata;
 	wire			w_bus_accept = bus_cs & bus_valid & bus_ready;
+	wire			w_selected		= ff_enable & ff_devsel;
+	wire			w_rom_selected	= w_selected & ff_func_rom;
+	reg		[7:0]	ff_buffer [0:255];
+	reg		[7:0]	ff_buffer_index;
+	reg		[7:0]	ff_length;
+	reg		[7:0]	ff_page_index;
+	reg				ff_page_error;
+	wire			w_page_command = (ff_rom_command == c_command_page_write[2:0]) ||
+											 (ff_rom_command == c_command_page_read[2:0]);
+	wire	[7:0]	w_buffer_index = bus_ready ? ff_buffer_index : ff_page_index;
+	reg		[7:0]	ff_buffer_data;
+	wire			w_page_read_data = rom_bus_rdata_en && ff_rom_state == c_rs_read_wait &&
+											 ff_rom_command == c_command_page_read[2:0];
+	wire	[8:0]	w_page_end = { 1'b0, ff_address[7:0] } + { 1'b0, ff_length };
+
+	always @( posedge clk ) begin
+		if( !reset_n ) begin
+			ff_buffer_index <= 8'd0;
+			ff_length <= 8'd0;
+		end
+		else if( w_rom_selected && w_bus_accept ) begin
+			if( bus_address == c_io_buffer ) begin
+				ff_buffer_index <= ff_buffer_index + 8'd1;
+			end
+			else if( bus_write && bus_address == c_io_index ) begin
+				ff_buffer_index <= bus_wdata;
+			end
+			else if( bus_write && bus_address == c_io_length ) begin
+				ff_length <= bus_wdata;
+			end
+		end
+	end
+
+	always @( posedge clk ) begin
+		ff_buffer_data <= ff_buffer[w_buffer_index];
+		if( w_rom_selected && w_bus_accept && bus_write && bus_address == c_io_buffer ) begin
+			ff_buffer[w_buffer_index] <= bus_wdata;
+		end
+		else if( w_page_read_data ) begin
+			ff_buffer[w_buffer_index] <= rom_bus_rdata;
+		end
+	end
 
 	always @( posedge clk ) begin
 		if( !reset_n ) begin
@@ -144,9 +196,6 @@ module system_controller#(
 			ff_devsel <= (bus_wdata == device_id);
 		end
 	end
-
-	wire			w_selected		= ff_enable & ff_devsel;
-	wire			w_rom_selected	= w_selected & ff_func_rom;
 
 	always @( posedge clk ) begin
 		if( !reset_n ) begin
@@ -178,7 +227,7 @@ module system_controller#(
 		if( !reset_n ) begin
 			ff_data <= 8'd0;
 		end
-		else if( rom_bus_rdata_en && ff_rom_state == c_rs_read_wait ) begin
+		else if( rom_bus_rdata_en && ff_rom_state == c_rs_read_wait && !w_page_command ) begin
 			ff_data <= rom_bus_rdata;
 		end
 		else if( w_rom_selected && w_bus_accept && bus_write && bus_address == c_io_data ) begin
@@ -222,6 +271,12 @@ module system_controller#(
 				{ c_command_read_status[2:0],  4'd6 }:	f_rom_step = { 1'b0, 1'b1, 1'b0, c_src_const, 8'h05 };
 				{ c_command_read_status[2:0],  4'd7 }:	f_rom_step = { 1'b0, 1'b0, 1'b1, c_src_const, 8'h00 };
 				{ c_command_read_status[2:0],  4'd8 }:	f_rom_step = { 1'b1, 1'b1, 1'b0, c_src_const, 8'h07 };
+				{ c_command_page_write[2:0],   4'd6 }:	f_rom_step = { 1'b0, 1'b1, 1'b0, c_src_const, 8'h03 };
+				{ c_command_page_write[2:0],   4'd7 }:	f_rom_step = { 1'b0, 1'b1, 1'b1, c_src_buffer, 8'h00 };
+				{ c_command_page_write[2:0],   4'd8 }:	f_rom_step = { 1'b1, 1'b1, 1'b0, c_src_const, 8'h07 };
+				{ c_command_page_read[2:0],    4'd6 }:	f_rom_step = { 1'b0, 1'b1, 1'b0, c_src_const, 8'h02 };
+				{ c_command_page_read[2:0],    4'd7 }:	f_rom_step = { 1'b0, 1'b0, 1'b1, c_src_const, 8'h00 };
+				{ c_command_page_read[2:0],    4'd8 }:	f_rom_step = { 1'b1, 1'b1, 1'b0, c_src_const, 8'h07 };
 				default:								f_rom_step = { 1'b1, 1'b1, 1'b0, c_src_const, 8'h07 };	//	access end
 				endcase
 			endcase
@@ -239,6 +294,7 @@ module system_controller#(
 		c_src_address_m:	w_rom_step_wdata = ff_address[15: 8];
 		c_src_address_h:	w_rom_step_wdata = ff_address[23:16];
 		c_src_data:			w_rom_step_wdata = ff_data;
+		c_src_buffer:		w_rom_step_wdata = ff_buffer_data;
 		default:			w_rom_step_wdata = w_rom_step[7:0];
 		endcase
 	end
@@ -256,15 +312,23 @@ module system_controller#(
 			ff_rom_bus_valid	<= 1'b0;
 			ff_rom_bus_write	<= 1'b0;
 			ff_rom_bus_wdata	<= 8'd0;
+			ff_page_index		<= 8'd0;
+			ff_page_error		<= 1'b0;
 		end
 		else begin
 			ff_rom_bus_valid <= 1'b0;
 			case( ff_rom_state )
 			c_rs_idle: begin
-				if( w_rom_selected && w_bus_accept && bus_write && bus_address == c_io_command && bus_wdata <= c_command_read_status ) begin
-					ff_rom_command	<= bus_wdata[2:0];
-					ff_rom_step		<= 4'd0;
-					ff_rom_state	<= c_rs_issue;
+				if( w_rom_selected && w_bus_accept && bus_write && bus_address == c_io_command && bus_wdata <= c_command_page_read ) begin
+					if( bus_wdata == c_command_page_write || bus_wdata == c_command_page_read ) begin
+						ff_page_error <= w_page_end[8];
+					end
+					if( bus_wdata < c_command_page_write || !w_page_end[8] ) begin
+						ff_rom_command	<= bus_wdata[2:0];
+						ff_rom_step		<= 4'd0;
+						ff_page_index	<= 8'd0;
+						ff_rom_state	<= c_rs_issue;
+					end
 				end
 			end
 			c_rs_issue: begin
@@ -280,6 +344,11 @@ module system_controller#(
 				if( w_rom_step_read ) begin
 					ff_rom_state	<= c_rs_read_wait;
 				end
+				else if( ff_rom_command == c_command_page_write[2:0] &&
+						 ff_rom_step == 4'd7 && ff_page_index != ff_length ) begin
+					ff_page_index <= ff_page_index + 8'd1;
+					ff_rom_state <= c_rs_buffer_next;
+				end
 				else if( !w_rom_step_last ) begin
 					ff_rom_step		<= ff_rom_step + 4'd1;
 					ff_rom_state	<= c_rs_issue;
@@ -290,7 +359,11 @@ module system_controller#(
 			end
 			c_rs_read_wait: begin
 				if( rom_bus_rdata_en ) begin
-					if( w_rom_step_last ) begin
+					if( w_page_command && ff_rom_step == 4'd7 && ff_page_index != ff_length ) begin
+						ff_page_index <= ff_page_index + 8'd1;
+						ff_rom_state <= c_rs_issue;
+					end
+					else if( w_rom_step_last ) begin
 						ff_rom_state	<= c_rs_finish;
 					end
 					else begin
@@ -303,6 +376,10 @@ module system_controller#(
 				if( rom_bus_ready ) begin
 					ff_rom_state	<= c_rs_idle;
 				end
+			end
+			c_rs_buffer_next: begin
+				// Synchronous buffer read must settle before the next issue.
+				ff_rom_state <= c_rs_issue;
 			end
 			default: begin
 				ff_rom_state	<= c_rs_idle;
@@ -351,8 +428,28 @@ module system_controller#(
 			w_rdata		= ff_data;
 			w_rdata_hit	= w_rom_selected;
 		end
+		c_io_buffer: begin
+			w_rdata = 8'hFF;
+			w_rdata_hit = w_rom_selected;
+		end
+		c_io_length: begin
+			w_rdata = ff_length;
+			w_rdata_hit = w_rom_selected;
+		end
+		c_io_index: begin
+			w_rdata = ff_buffer_index;
+			w_rdata_hit = w_rom_selected;
+		end
+		c_io_result: begin
+			w_rdata = { 7'd0, ff_page_error };
+			w_rdata_hit = w_rom_selected;
+		end
+		c_io_capability: begin
+			w_rdata = 8'hA1;
+			w_rdata_hit = w_rom_selected;
+		end
 		default: begin
-			//	48h-4Fh: reserved
+			//	4Bh-4Dh: reserved
 		end
 		endcase
 	end
@@ -361,19 +458,22 @@ module system_controller#(
 		if( !reset_n ) begin
 			ff_rdata	<= 8'hFF;
 			ff_rdata_en	<= 1'b0;
+			ff_rdata_buffer <= 1'b0;
 		end
 		else if( w_bus_accept && !bus_write && w_rdata_hit ) begin
 			ff_rdata	<= w_rdata;
 			ff_rdata_en	<= 1'b1;
+			ff_rdata_buffer <= (bus_address == c_io_buffer);
 		end
 		else begin
 			ff_rdata	<= 8'hFF;
 			ff_rdata_en	<= 1'b0;
+			ff_rdata_buffer <= 1'b0;
 		end
 	end
 
 	assign bus_ready				= (ff_rom_state == c_rs_idle);
-	assign bus_rdata				= ff_rdata;
+	assign bus_rdata				= ff_rdata_buffer ? ff_buffer_data : ff_rdata;
 	assign bus_rdata_en				= ff_rdata_en;
 
 	assign rom_bus_address			= ff_rom_bus_address;
