@@ -38,6 +38,14 @@ module tangnano20k_vdp_cartridge (
 	output			ws2812_led,		//	PIN79
 	input	[1:0]	button,			//	PIN87, 88	KEY2, KEY1
 
+	//	Config ROM (BANK3)
+	output			mspi_cs,		//	PIN60
+	output			mspi_clk,		//	PIN59
+	inout			mspi_hold,		//	PIN63
+	inout			mspi_wp,		//	PIN57
+	inout			mspi_do,		//	PIN62
+	inout			mspi_di,		//	PIN61
+
 	//	HDMI
 	output			tmds_clk_p,		//	(PIN33/34)
 	output			tmds_clk_n,		//	dummy
@@ -82,6 +90,17 @@ module tangnano20k_vdp_cartridge (
 	wire	[7:0]	w_bus_wdata;
 	wire	[7:0]	w_bus_rdata;
 	wire			w_bus_rdata_en;
+	wire	[3:0]	w_bus_sysctrl_address;
+	wire			w_bus_sysctrl_ioreq;
+	wire	[7:0]	w_bus_sysctrl_rdata;
+	wire			w_bus_sysctrl_rdata_en;
+	wire			w_rom_bus_address;
+	wire			w_rom_bus_valid;
+	wire			w_rom_bus_ready;
+	wire			w_rom_bus_write;
+	wire	[7:0]	w_rom_bus_wdata;
+	wire	[7:0]	w_rom_bus_rdata;
+	wire			w_rom_bus_rdata_en;
 
 	wire			w_bus_vdp_ioreq;
 	wire			w_bus_vdp_ready;
@@ -186,6 +205,8 @@ module tangnano20k_vdp_cartridge (
 		.int_n				( w_int_n					),
 		.bus_address		( w_bus_address				),
 		.bus_ioreq			( w_bus_ioreq				),
+		.bus_sysctrl_address ( w_bus_sysctrl_address		),
+		.bus_sysctrl_ioreq	( w_bus_sysctrl_ioreq		),
 		.bus_write			( w_bus_write				),
 		.bus_valid			( w_bus_valid				),
 		.bus_ready			( w_bus_ready				),
@@ -228,10 +249,60 @@ module tangnano20k_vdp_cartridge (
 		.run_busy			( w_geo_run_busy			)
 	);
 
-	assign w_bus_rdata		= ( w_geo_rdata_en		) ? w_geo_rdata:
+	assign w_bus_rdata		= ( w_bus_sysctrl_rdata_en ) ? w_bus_sysctrl_rdata:
+						  ( w_geo_rdata_en		) ? w_geo_rdata:
 						  ( w_bus_vdp_rdata_en	) ? w_bus_vdp_rdata: 8'hFF;
-	assign w_bus_rdata_en	= w_bus_vdp_rdata_en | w_geo_rdata_en;
-	assign w_bus_ready		= w_geo_hit ? w_geo_ready: w_bus_vdp_ready;
+	assign w_bus_rdata_en	= w_bus_sysctrl_rdata_en | w_bus_vdp_rdata_en | w_geo_rdata_en;
+	//	System Controller accesses during a ROM command are dropped, not retried.
+	assign w_bus_ready		= w_bus_sysctrl_ioreq ? 1'b1:
+							  w_geo_hit ? w_geo_ready: w_bus_vdp_ready;
+
+	// --------------------------------------------------------------------
+	//	Config ROM Reader/Writer (I/O 40h-4Fh)
+	// --------------------------------------------------------------------
+	system_controller u_system_controller (
+		.clk				( clk85m					),
+		.reset_n			( reset_n					),
+		.bus_cs				( w_bus_sysctrl_ioreq		),
+		.bus_address		( w_bus_sysctrl_address		),
+		.bus_valid			( w_bus_valid				),
+		.bus_ready			(							),
+		.bus_write			( w_bus_write				),
+		.bus_wdata			( w_bus_wdata				),
+		.bus_rdata			( w_bus_sysctrl_rdata		),
+		.bus_rdata_en		( w_bus_sysctrl_rdata_en		),
+		.rom_bus_address	( w_rom_bus_address			),
+		.rom_bus_valid		( w_rom_bus_valid			),
+		.rom_bus_ready		( w_rom_bus_ready			),
+		.rom_bus_write		( w_rom_bus_write			),
+		.rom_bus_wdata		( w_rom_bus_wdata			),
+		.rom_bus_rdata		( w_rom_bus_rdata			),
+		.rom_bus_rdata_en	( w_rom_bus_rdata_en			)
+	);
+
+	ip_spi_rom u_spi_rom (
+		.reset_n			( reset_n					),
+		.clk				( clk85m					),
+		.clk_serial			( clk215m					),
+		.bus_cs				( 1'b1						),
+		.bus_address		( w_rom_bus_address			),
+		.bus_write			( w_rom_bus_write			),
+		.bus_valid			( w_rom_bus_valid			),
+		.bus_ready			( w_rom_bus_ready			),
+		.bus_wdata			( w_rom_bus_wdata			),
+		.bus_rdata			( w_rom_bus_rdata			),
+		.bus_rdata_en		( w_rom_bus_rdata_en			),
+		.stream_rdata		(							),
+		.stream_valid		(							),
+		.stream_ready		( 1'b0						),
+		.stream_stop		( 1'b0						),
+		.srom_cs_n			( mspi_cs					),
+		.srom_clk			( mspi_clk					),
+		.srom_hold_n		( mspi_hold					),
+		.srom_wp_n			( mspi_wp					),
+		.srom_do			( mspi_do					),
+		.srom_di			( mspi_di					)
+	);
 
 	// --------------------------------------------------------------------
 	//	V9968 core
@@ -243,7 +314,7 @@ module tangnano20k_vdp_cartridge (
 		.bus_address		( w_bus_address				),
 		.bus_ioreq			( w_bus_ioreq				),
 		.bus_write			( w_bus_write				),
-		.bus_valid			( w_bus_valid & ~w_geo_hit	),
+		.bus_valid			( w_bus_valid & w_bus_ioreq & ~w_geo_hit ),
 		.bus_ready			( w_bus_vdp_ready			),
 		.bus_wdata			( w_bus_wdata				),
 		.bus_rdata			( w_bus_vdp_rdata			),
@@ -331,7 +402,7 @@ module tangnano20k_vdp_cartridge (
 	);
 
 	// --------------------------------------------------------------------
-	//	Debug—p LED
+	//	Debugï¿½p LED
 	// --------------------------------------------------------------------
 	ip_ws2812_led u_led (
 		.reset_n			( reset_n					),

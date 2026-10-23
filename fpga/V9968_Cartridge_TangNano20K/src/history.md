@@ -1,3 +1,37 @@
+## 2026-10-23 ConfigROM Reader/Writer 組み込み・V9968UPD 作成（朝の作業）
+
+### System Controller / SPI Flash
+
+- Y8960 Cartridge からコピーした `spi_rom/ip_spi_rom.v` と `system_controller/system_controller.v` を V9968 Cartridge に組み込んだ。System Controller のデバイス ID は 01h、ファンクション 01h は Config ROM Reader/Writer とする。
+- V9968 Cartridge には SerialSRAM がないため、コピー元の起動時 ROM→SRAM コピーと、そのための初期化・WAIT 制御を削除した。既存の SDRAM 初期化中の WAIT 制御は維持する。
+- `msx_slot.v` に I/O 40h-4Fh のデコードと System Controller 用のアドレス・選択出力を追加。既存の 88h/98h の VDP/geo3d 用デコードを維持し、トップで読み出し応答を取りまとめた。
+- コマンド実行中は System Controller への読み書きを無視し、WAIT や完了後の再実行は行わない。MSX 側はコマンド発行後、40h が 7Fh を返すまでポーリングする。VDP/geo3d の既存ポートは利用可能。
+- トップに `mspi_cs` / `mspi_clk` / `mspi_hold` / `mspi_wp` / `mspi_do` / `mspi_di` を追加。添付回路図に合わせて BANK3 の 60 / 59 / 63 / 57 / 62 / 61 番ピンへ割り当て、Gowin の「Use MSPI as Regular IO」を有効化した。
+- System Controller と SPI のバスクロックは `clk85m`、SPI のシリアル側は `clk215m` を使用。シリアル側のリセット解除を同期化し、要求/応答ハンドシェイク用のクロック間制約を追加した。
+- Gowin プロジェクトへ RTL を登録し、`doc/spec/system_controller.md` の ID 記述と接続・動作仕様を更新した。
+
+### V9968UPD
+
+- `tool` にコピーされた Y8960 更新ツールを `v9968upd.asm` / `V9968UPD.COM` に改名・変更し、ZMA でビルドできる ConfigROM 専用ツールを作成した。
+- `/C`・`/B` と BIOS 更新・BIOS バージョン処理を削除。`V9968UPD V9968CFG.BIN` で更新し、引数なしでは Usage と検出したカートリッジの Config バージョンを表示、`/H`・`/?` ではヘルプを表示する。
+- System Controller の ID は 01h を選択。イメージ先頭の `V9968_TN20K_CARTRIDGE` と 00h パディングを含む 32byte 全体を検査し、続く 16byte をバージョン情報、+48 以降を Config data 本体として扱う。
+- Config data は 000000h から書き込み、サイズは 1-7D0000h byte に制限。消去時の BUSY 観測・先頭 256byte の簡易ブランクチェック、書き込み後の全データのベリファイ、エラー時のアドレス・期待値・実読値・直前の SR1 表示を引き継いだ。
+- 本体の書き込み・ベリファイが成功した後だけ、専用の 64KB ブロック 7D0000h-7DFFFFh を消去し、7DFF00h-7DFF0Fh に 16byte の Config バージョンを書き込んで検証する。本体更新失敗時はバージョン領域を更新しない。
+- `build.bat` と `tool/v9968upd.md` を更新。`config/header.bin` と `V9968CFG.BIN` のヘッダ・データ本体の整合も確認した。
+
+### 検証結果
+
+- ModelSim の System Controller テスト 3 本と各 `run.bat` がすべて成功（エラー0、警告0）。ID/Function 選択、BUSY 中のアクセス無視、スロットデコード・バス解放、Flash の読み書き・64KB 消去・チップ消去・ステータス読み出し・40h ポーリングを確認した。
+- Gowin の合成・配置配線・ビットストリーム生成が成功。最終検証ビルドは Setup/Hold 違反とも0件。解析上の Fmax は `clk215m` が 217.926MHz（要求 214.773MHz）、`clk85m` が 86.029MHz（要求 85.909MHz）。変更前の比較ビルドも Setup/Hold 違反0件だった。85MHz 側の余裕は小さい。
+- ZMA で `V9968UPD.COM`（2326byte）を生成。Python の `test_v9968upd.py` で COM 自体を Z80 エミュレータ上で実行し、8 テストすべて成功。引数・検出・シグネチャ・サイズ、消去/書き込み/検証異常時のバージョン保持、16KB/64KB 境界などを確認した。MSX-DOS と System Controller はテスト用モデルを使用。
+- ユーザー側でも合成が通り、FPGA へ書き込めるところまで確認済み。MSX に装着しての `V9968UPD` による ConfigROM 更新はまだ未確認。
+
+### 次回（帰宅後）の確認
+
+- 実機 MSX に装着し、引数なしの `V9968UPD` でデバイス検出と Config バージョン表示を確認する。
+- `V9968UPD V9968CFG.BIN` で消去・書き込み・ベリファイ・バージョン更新まで成功するか確認する。
+- 更新後のバージョン表示と、再起動後に更新した FPGA コンフィグレーションで起動できることを確認する。更新失敗時は表示されたアドレス・期待値・実読値・SR1 を記録する。
+
 ## 2026-09-30 VDPコマンド互換性とタイミング改善
 
 ### コマンド互換性
@@ -100,4 +134,3 @@
 
 - キャッシュを通らない画面・スプライト読み出しは、dirtyラインが書き戻されるまで更新前のVRAMを見る可能性がある。CPUの無アクセス時は256クロック後の自動フラッシュで書き戻される。
 - 係数修正の前後で、水平座標進行と補間タップの位相を画素ごとに照合するテストは追加していない。必要になった場合は出力画素値を期待値と比較する。
-

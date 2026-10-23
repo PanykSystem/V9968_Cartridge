@@ -71,6 +71,8 @@ module msx_slot(
 	input			int_n,
 	output	[2:0]	bus_address,
 	output			bus_ioreq,
+	output	[3:0]	bus_sysctrl_address,
+	output			bus_sysctrl_ioreq,
 	output			bus_write,
 	output			bus_valid,
 	input			bus_ready,
@@ -90,6 +92,7 @@ module msx_slot(
 	reg		[7:0]	ff_slot_address;
 	reg		[7:0]	ff_slot_data;
 	reg		[2:0]	ff_bus_address;
+	reg		[3:0]	ff_bus_sysctrl_address;
 	wire			w_active;
 	reg				ff_initial_busy		= 1'b1;
 	reg				ff_iorq_wr			= 1'b0;
@@ -98,6 +101,7 @@ module msx_slot(
 	reg				ff_write			= 1'b0;
 	reg				ff_valid			= 1'b0;
 	reg				ff_ioreq			= 1'b0;
+	reg				ff_sysctrl_ioreq	= 1'b0;
 	reg		[7:0]	ff_rdata			= 8'd0;
 	reg				ff_data_out			= 1'b0;
 	wire	[7:0]	w_io_address;
@@ -193,26 +197,32 @@ module msx_slot(
 		if( !p_slot_reset_n ) begin
 			ff_valid	<= 1'b0;
 			ff_ioreq	<= 1'b0;
+			ff_sysctrl_ioreq <= 1'b0;
 			ff_write	<= 1'b1;
 		end
 		else if( ff_valid ) begin
-			if( bus_ready || !ff_ioreq ) begin
+			if( bus_ready || !(ff_ioreq || ff_sysctrl_ioreq) ) begin
 				ff_valid	<= 1'b0;
 			end
 		end
 		else if( !ff_active && w_active ) begin
+			ff_ioreq			<= 1'b0;
+			ff_sysctrl_ioreq	<= 1'b0;
 			if( { ff_slot_address[7:3], 3'd0 } == w_io_address ) begin
 				ff_bus_address	<= ff_slot_address[2:0];
 				ff_ioreq		<= 1'b1;
 				ff_valid		<= 1'b1;
 			end
-			else begin
-				ff_ioreq	<= 1'b0;
+			else if( ff_slot_address[7:4] == 4'h4 ) begin
+				ff_bus_sysctrl_address <= ff_slot_address[3:0];
+				ff_sysctrl_ioreq	<= 1'b1;
+				ff_valid		<= 1'b1;
 			end
 			ff_write	<= ff_iorq_wr;
 		end
 		else if( !ff_active ) begin
 			ff_ioreq	<= 1'b0;
+			ff_sysctrl_ioreq <= 1'b0;
 			ff_write	<= 1'b1;
 		end
 	end
@@ -224,7 +234,7 @@ module msx_slot(
 		if( !p_slot_reset_n ) begin
 			ff_rdata	<= 8'h00;
 		end
-		else if( !ff_ioreq ) begin
+		else if( !(ff_ioreq || ff_sysctrl_ioreq) ) begin
 			ff_rdata	<= 8'h00;
 		end
 		else if( bus_rdata_en ) begin
@@ -233,6 +243,8 @@ module msx_slot(
 	end
 
 	assign bus_ioreq		= ff_ioreq;
+	assign bus_sysctrl_ioreq = ff_sysctrl_ioreq;
+	assign bus_sysctrl_address = ff_bus_sysctrl_address;
 	assign bus_address		= ff_bus_address;
 	assign bus_wdata		= ff_slot_data;
 	assign bus_write		= ff_write;

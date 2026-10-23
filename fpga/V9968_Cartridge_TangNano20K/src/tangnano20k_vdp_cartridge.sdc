@@ -23,4 +23,6 @@ set_clock_uncertainty 0.5 -from [get_clocks {clk42g}] -to [get_clocks {clk85m}]
 
 # 非同期クロックグループ宣言 → clk1とclk2間の全パスをタイミング除外
 set_clock_groups -asynchronous -group [get_clocks {clk215m}] -group [get_clocks {clk42m}]
+# SPI ROM uses two-flop request/ack synchronizers and holds data until acknowledged.
+set_clock_groups -asynchronous -group [get_clocks {clk215m}] -group [get_clocks {clk85m}]
 set_clock_groups -asynchronous -group [get_clocks {clk}] -group [get_clocks {clk85m}]

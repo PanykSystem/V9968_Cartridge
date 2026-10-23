@@ -2,16 +2,19 @@ GowinSynthesis start
 Running parser ...
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\debugger\ip_debugger.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\dvi_tx\dvi_tx.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_bus.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_z80if.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_clkdiv\gowin_clkdiv.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll\gowin_rpll.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll2\gowin_rpll2.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\msx_slot\msx_slot.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\spi_rom\ip_spi_rom.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\ram\ip_ram.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\sdram\ip_sdram_tangnano20k_c.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_bus.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp.v'
 Undeclared symbol 'w_vram_interleave', assumed default net type 'wire'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp.v":362)
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette.v'
@@ -37,7 +40,6 @@ Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridg
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_vram_interface.v'
 Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\ws2812_led\ip_ws2812_led.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_z80if.v'
 Compiling module 'tangnano20k_vdp_cartridge'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":24)
 Compiling module 'Gowin_rPLL'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll\gowin_rpll.v":10)
 Compiling module 'Gowin_rPLL2'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll2\gowin_rpll2.v":10)
@@ -58,6 +60,8 @@ WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users
 WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":130)
 WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":131)
 WARN  (EX3791) : Expression size 36 truncated to fit in target size 18("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":1224)
+Compiling module 'system_controller'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v":58)
+Compiling module 'ip_spi_rom'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\spi_rom\ip_spi_rom.v":27)
 Compiling module 'vdp'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp.v":58)
 Compiling module 'vdp_cpu_interface'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_cpu_interface.v":58)
 Compiling module 'vdp_timing_control'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control.v":57)
