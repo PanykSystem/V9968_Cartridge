@@ -28,10 +28,13 @@ module hdmi_converter (
 	localparam [9:0] V_END			= 10'd516;
 	localparam [9:0] V_FREERUN		= 10'd524;
 	localparam [10:0] ACQ_TIMEOUT	= 11'd2000;		// lines: > 3 input frames at 50Hz
+	// Output h_count loaded when the first input line start is seen. Reading then begins
+	// (H_TOTAL - H_LOCK) + H_START = 456 clocks (0.5 line) after the write began.
+	localparam [9:0] H_LOCK			= 10'd578;
 
 	localparam [2:0] ST_REQ		= 3'd0;		// resync: clear both FIFO sides
 	localparam [2:0] ST_REL		= 3'd1;
-	localparam [2:0] ST_ACQ		= 3'd2;		// hold before V_START until 3 lines are ready
+	localparam [2:0] ST_ACQ		= 3'd2;		// wait for the first line of an input frame
 	localparam [2:0] ST_FREE	= 3'd3;		// no input: blank frames for the monitor
 	localparam [2:0] ST_LOCK	= 3'd4;
 
@@ -56,8 +59,11 @@ module hdmi_converter (
 		end
 	endfunction
 
-	// Eight complete-line slots. Unused columns keep the RAM addresses power-of-two.
-	reg [23:0] line_ram [0:8191];
+	// Two line slots. A line is read while it is still being written: the writer
+	// (1 pixel/clk42m) is faster than the reader (1 pixel/clk28m), so a reader that
+	// starts after the writer never overtakes it. Pointers count lines started (write)
+	// and lines finished (read).
+	reg [23:0] line_ram [0:2047];
 	reg [23:0] ram_q;
 	reg [3:0] write_bin;
 	reg [3:0] write_gray;
@@ -116,22 +122,28 @@ module hdmi_converter (
 	//	clk42m: line writer
 	// --------------------------------------------------------------------
 	wire clear42 = !reset42[1] || resync42;
-	wire full = write_gray == { ~read_gray_sync[3:2], read_gray_sync[1:0] };
 	wire [3:0] write_next = write_bin + 4'd1;
+	wire [3:0] write_used = write_bin - gray_to_bin(read_gray_sync);
 	reg old_de;
 	reg old_vs;
 	reg armed;
+	reg write_open;
+	reg write_slot;
 	reg [9:0] write_x;
 	reg [9:0] write_y;
 	reg overflow42;
 	reg input_error42;
-	wire write_enable = !clear42 && armed && video_de && !full &&
-						!overflow42 && !input_error42 &&
-						write_x < 10'd720 && write_y < 10'd480;
+	wire write_ok = armed && !overflow42 && !input_error42;
+	wire line_start = video_de && !old_de;
+	// Both slots busy means the reader has not finished the line written two lines ago.
+	wire start_ok = write_ok && write_y < 10'd480 && write_used < 4'd2;
+	wire write_enable = !clear42 && video_de && write_x < 10'd720 &&
+						(line_start ? start_ok : (write_open && write_ok));
+	wire write_sel = line_start ? write_bin[0] : write_slot;
 
 	always @( posedge clk42m ) begin
 		if( write_enable )
-			line_ram[{ write_bin[2:0], write_x }] <= { video_r, video_g, video_b };
+			line_ram[{ write_sel, write_x }] <= { video_r, video_g, video_b };
 	end
 
 	always @( posedge clk42m ) begin
@@ -154,6 +166,8 @@ module hdmi_converter (
 			old_de <= 1'b0;
 			old_vs <= 1'b1;
 			armed <= 1'b0;
+			write_open <= 1'b0;
+			write_slot <= 1'b0;
 			write_x <= 10'd0;
 			write_y <= 10'd0;
 			overflow42 <= 1'b0;
@@ -172,28 +186,36 @@ module hdmi_converter (
 				if( armed && (write_y != 10'd480 || video_de || old_de) )
 					input_error42 <= 1'b1;
 			end
-			if( armed && !overflow42 && !input_error42 ) begin
-				if( video_de ) begin
-					if( !old_de && full )
+			if( write_ok ) begin
+				if( line_start ) begin
+					if( write_y >= 10'd480 )
+						input_error42 <= 1'b1;
+					else if( write_used >= 4'd2 )
 						overflow42 <= 1'b1;
-					if( write_x >= 10'd720 || write_y >= 10'd480 )
+					else begin
+						// Publish the line at its start: the reader may follow it.
+						write_open <= 1'b1;
+						write_slot <= write_bin[0];
+						write_bin <= write_next;
+						write_gray <= (write_next >> 1) ^ write_next;
+						write_y <= write_y + 10'd1;
+					end
+				end
+				if( video_de ) begin
+					if( write_x >= 10'd720 )
 						input_error42 <= 1'b1;
 					else
 						write_x <= write_x + 10'd1;
 				end
 				else begin
 					write_x <= 10'd0;
-					if( old_de ) begin
-						if( write_x != 10'd720 )
-							input_error42 <= 1'b1;
-						else begin
-							write_bin <= write_next;
-							write_gray <= (write_next >> 1) ^ write_next;
-							write_y <= write_y + 10'd1;
-						end
-					end
+					write_open <= 1'b0;
+					if( old_de && write_open && write_x != 10'd720 )
+						input_error42 <= 1'b1;
 				end
 			end
+			else
+				write_open <= 1'b0;
 		end
 	end
 
@@ -228,18 +250,21 @@ module hdmi_converter (
 
 	wire fault42 = overflow_s[1] || input_error_s[1];
 	wire err_under = state == ST_LOCK && h_count == H_START - 10'd1 && active_line && empty;
-	// Locked frames must have the measured input length and the same FIFO level as at
-	// acquisition (+/-1 line for pointer synchronization); otherwise reacquire.
+	// The first line of an input frame has started (writer arms at VS only).
+	wire acq_seen = state == ST_ACQ && !empty;
+	wire acq_bad = acq_seen && (!frame_valid || ready_lines != 4'd1);
+	// Locked frames must have the measured input length, and the first line must have
+	// started (only that one) half a line before it is read; otherwise reacquire.
 	wire frame_bad = state == ST_LOCK && (!frame_valid || frame_total != locked_total);
 	wire start_bad = state == ST_LOCK && line_end && v_count == V_START - 10'd1 &&
-					 (ready_lines < 4'd2 || ready_lines > 4'd4);
+					 ready_lines != 4'd1;
 	wire input_seen = state == ST_FREE && ready_lines != 4'd0;
-	wire go_resync = running && (fault42 || err_under || frame_bad || start_bad || input_seen);
+	wire go_resync = running && (fault42 || err_under || acq_bad || frame_bad || start_bad || input_seen);
 
 	// Synchronous dual-clock RAM: data and timing outputs have the same one-clock latency.
 	always @( posedge clk28m ) begin
 		if( read_enable )
-			ram_q <= line_ram[{ read_bin[2:0], read_x }];
+			ram_q <= line_ram[{ read_bin[0], read_x }];
 	end
 
 	always @( posedge clk28m ) begin
@@ -334,11 +359,6 @@ module hdmi_converter (
 				else if( state == ST_ACQ ) begin
 					if( v_count != V_START - 10'd1 )
 						v_count <= V_START - 10'd1;
-					else if( frame_valid && ready_lines >= 4'd3 ) begin
-						v_count <= V_START;
-						locked_total <= frame_total;
-						state <= ST_LOCK;
-					end
 					else if( hold_lines == ACQ_TIMEOUT ) begin
 						v_count <= V_START;
 						state <= ST_FREE;
@@ -350,6 +370,15 @@ module hdmi_converter (
 					v_count <= (v_count == V_FREERUN - 10'd1) ? 10'd0 : v_count + 10'd1;
 				else
 					v_count <= (v_count == locked_total - 10'd1) ? 10'd0 : v_count + 10'd1;
+			end
+
+			if( acq_seen && !go_resync ) begin
+				// Align the output line phase to the input once; it then stays fixed
+				// because both line periods and frame lengths are identical.
+				h_count <= H_LOCK;
+				v_count <= V_START - 10'd1;
+				locked_total <= frame_total;
+				state <= ST_LOCK;
 			end
 		end
 	end

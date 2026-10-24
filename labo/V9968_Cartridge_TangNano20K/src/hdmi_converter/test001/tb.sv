@@ -97,6 +97,13 @@ module tb;
 		#1;
 		if( scenario == 1 ) v_max = 625;
 	end
+	localparam real LINE_NS = 2736 * 11.64;
+	realtime de_rise [0:479];
+	reg old_video_de = 0;
+	always @( posedge clk42m ) begin
+		if( video_de && !old_video_de && v85 >= 15 && v85 < 495 ) de_rise[v85 - 15] = $realtime;
+		old_video_de <= video_de;
+	end
 	reg debug = 0;
 	initial if( $test$plusargs("DEBUG") ) debug = 1;
 	always @( dut.state ) if( debug )
@@ -113,6 +120,7 @@ module tb;
 	integer frame_start = -1, last_frame_start = -1, period;
 	integer lock_losses = 0, free_vs = 0;
 	reg run_valid = 0;
+	reg skip_h = 0;
 	reg locked_d = 0;
 	reg old_de = 0, old_hs = 0, old_vs = 0, old_locked_d = 0;
 	reg vs_in_lock = 0;
@@ -128,15 +136,18 @@ module tb;
 		end
 		else begin
 			output_cycles = output_cycles + 1;
+			// Locking reloads h_count once: skip HS checks until the next full HS pulse.
+			if( locked && !locked_d ) skip_h = 1;
 			if( display_hs && !old_hs ) begin
-				if( last_hs >= 0 && output_cycles - last_hs != H_TOTAL )
+				if( !skip_h && last_hs >= 0 && output_cycles - last_hs != H_TOTAL )
 					$fatal(1, "Horizontal period %0d", output_cycles - last_hs);
 				last_hs = output_cycles;
 				if( display_vs ) vs_lines = vs_lines + 1;
+				skip_h = 0;
 			end
 			if( display_hs ) hs_width = hs_width + 1;
 			if( !display_hs && old_hs ) begin
-				if( hs_width != 62 ) $fatal(1, "HS width %0d", hs_width);
+				if( !skip_h && hs_width != 62 ) $fatal(1, "HS width %0d", hs_width);
 				hs_width = 0;
 			end
 			if( display_vs && !old_vs ) begin
@@ -180,6 +191,9 @@ module tb;
 					if( data !== pixel(fid, y, x) )
 						$fatal(1, "Pixel mismatch fid=%0d y=%0d x=%0d got=%h expected=%h",
 							fid, y, x, data, pixel(fid, y, x));
+					if( x == 0 && ($realtime - de_rise[y] < 0.49 * LINE_NS || $realtime - de_rise[y] > 0.52 * LINE_NS) )
+						$fatal(1, "Read start %0.1fns after write start (expected about half a line)",
+							$realtime - de_rise[y]);
 					if( output_cycles - last_hs != 122 + x )
 						$fatal(1, "Active horizontal position");
 					x = x + 1;

@@ -109,7 +109,7 @@ Compiling module 'vdp_video_ram_line_buffer'("C:\Users\hra\Documents\github\HRA_
 Extracting RAM for identifier 'ff_imem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v":66)
 Compiling module 'vdp_video_out_bilinear'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out_bilinear.v":60)
 Compiling module 'hdmi_converter'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_converter\hdmi_converter.v":1)
-Extracting RAM for identifier 'line_ram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_converter\hdmi_converter.v":60)
+Extracting RAM for identifier 'line_ram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_converter\hdmi_converter.v":66)
 Switching to VHDL mode to elaborate design unit 'hdmi_tx'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":434)
 Processing 'hdmi_tx(device_family="",clock_frequency=28.63636,audio_frequency=48.0)(1,0)(1,4)(1,3)(1,8)(1,4)(1,4)(1,4)(1,3)(1,3)(1,7)(1,8)(1,2)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1397)
 WARN  (EX4196) : Comparison between unequal length arrays always returns TRUE, left argument length 3 is different from right argument length 2 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1528)
