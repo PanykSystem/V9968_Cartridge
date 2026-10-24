@@ -1,16 +1,16 @@
--d C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\impl\gwsynthesis\tangnano20k_vdp_cartridge.vg
+-d C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\impl\gwsynthesis\tangnano20k_vdp_cartridge.vg
 -p GW2AR-18C-QFN88-8
 -pn GW2AR-LV18QN88C8/I7
--cst C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.cst
--cfg C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\impl\pnr\device.cfg
--sdc C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.sdc
+-cst C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.cst
+-cfg C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\impl\pnr\device.cfg
+-sdc C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.sdc
 -bit
 -tr
 -ph
 -timing
 -cst_error
 -place_option 0
--route_option 2
+-route_option 0
 -clock_route_order 0
 -correct_hold 1
 -route_maxfan 100

@@ -154,7 +154,7 @@ module ip_spi_rom(
 	reg				ff_serial_reset_n1 = 1'b0;
 	reg				ff_spi_processing;
 	reg		[1:0]	ff_spi_div;
-	wire			ff_spi_ce = (ff_spi_div == 2'd3);
+	wire			ff_spi_ce = (ff_spi_div == 2'd2);
 	reg		[4:0]	ff_spi_state;
 	reg		[2:0]	ff_spi_substate;
 	reg				ff_spi_clk;
@@ -970,13 +970,13 @@ module ip_spi_rom(
 	end
 
 	//	Allow an 18.6ns half-cycle for Flash output delay and board I/O delay.
-	//	SPI clock = clk_serial / 8 (26.85MHz at clk215m).
+	//	SPI clock = clk_serial / 6 (23.86MHz, 20.9ns half-cycle at clk143m).
 	always @( posedge clk_serial ) begin
 		if( !ff_serial_reset_n1 ) begin
 			ff_spi_div <= 2'd0;
 		end
 		else if( ff_spi_processing ) begin
-			ff_spi_div <= ff_spi_div + 2'd1;
+			ff_spi_div <= ff_spi_ce ? 2'd0 : ff_spi_div + 2'd1;
 		end
 		else begin
 			ff_spi_div <= 2'd0;

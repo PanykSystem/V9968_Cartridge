@@ -9,7 +9,7 @@ module tb #(
 ) ();
 	reg test_passed = 0;
 	localparam		CLK_PERIOD			= 11640;	//	85.9MHz
-	localparam		CLK_SERIAL_PERIOD	= 4656;		//	214.8MHz
+	localparam		CLK_SERIAL_PERIOD	= 6984;		//	143.18MHz
 
 	reg				clk;
 	reg				clk_serial;
@@ -99,6 +99,7 @@ module tb #(
 	reg		[63:0]	mon_shift;
 	time			mon_cs_rise;
 	time			mon_clk_edge = 0;
+	time			mon_min_half = 64'h7FFF_FFFF_FFFF_FFFF;
 	integer			mon_programs = 0;
 	integer			mon_reads = 0;
 	reg		[7:0]	mon_command;
@@ -125,10 +126,12 @@ module tb #(
 		end
 	end
 	always @( flash_spi_clk ) begin
-		if( reset_n && mon_clk_edge != 0 && ($time - mon_clk_edge) < 18000 ) begin
-			$display( "[ERROR] SPI half-cycle shorter than 18ns" );
+		if( reset_n && mon_clk_edge != 0 && ($time - mon_clk_edge) < 20000 ) begin
+			$display( "[ERROR] SPI half-cycle shorter than 20ns" );
 			errors = errors + 1;
 		end
+		if( reset_n && mon_clk_edge != 0 && ($time - mon_clk_edge) < mon_min_half )
+			mon_min_half = $time - mon_clk_edge;
 		mon_clk_edge = $time;
 	end
 	always @( posedge flash_spi_cs_n ) begin
@@ -518,6 +521,13 @@ module tb #(
 		expect_read( 8'h40, 8'h7F, "re-enabled" );
 		expect_no_response( 8'h41, "devsel cleared by disable" );
 		stage_end( "deselect / disable" );
+
+		//	SPI clock = clk_serial / 6: both half-cycles are 3 clk_serial cycles.
+		$display( "[INFO] SPI min half-cycle %0t", mon_min_half );
+		if( mon_min_half != 3 * CLK_SERIAL_PERIOD ) begin
+			$display( "[ERROR] SPI half-cycle is not 3 clk_serial cycles" );
+			errors = errors + 1;
+		end
 
 		if( errors == 0 ) begin
 			test_passed = 1;
