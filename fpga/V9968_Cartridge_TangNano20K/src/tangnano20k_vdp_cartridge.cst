@@ -7,6 +7,7 @@
 //Device Version: C
 //Created Time: Mon 10 12 09:27:25 2026
 
+// HDMI
 IO_LOC "tmds_clk_p" 33,34;
 IO_PORT "tmds_clk_p" IO_TYPE=LVDS25 PULL_MODE=NONE DRIVE=3.5 BANK_VCCIO=3.3;
 IO_LOC "tmds_d_p[0]" 35,36;
@@ -15,6 +16,7 @@ IO_LOC "tmds_d_p[1]" 37,38;
 IO_PORT "tmds_d_p[1]" IO_TYPE=LVDS25 PULL_MODE=NONE DRIVE=3.5 BANK_VCCIO=3.3;
 IO_LOC "tmds_d_p[2]" 39,40;
 IO_PORT "tmds_d_p[2]" IO_TYPE=LVDS25 PULL_MODE=NONE DRIVE=3.5 BANK_VCCIO=3.3;
+
 IO_LOC "ws2812_led" 79;
 IO_PORT "ws2812_led" IO_TYPE=LVTTL33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
 IO_LOC "oe_n" 20;

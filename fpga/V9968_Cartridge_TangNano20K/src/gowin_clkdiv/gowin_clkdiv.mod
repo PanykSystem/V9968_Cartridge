@@ -7,8 +7,9 @@
 
 -mod_name Gowin_CLKDIV
 -file_name gowin_clkdiv
--path D:/github/HRA_product/TangCartMSX/RTL/tangnano20k_vdp_cartridge_step7/src/gowin_clkdiv/
+-path C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/labo/V9968_Cartridge_TangNano20K/src/gowin_clkdiv/
 -type CLKDIV
 -file_type vlg
--division_factor 2
+-ip_version 1.0
+-division_factor 5
 -calib false

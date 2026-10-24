@@ -22,7 +22,7 @@
 // -----------------------------------------------------------------------------
 
 module tangnano20k_vdp_cartridge (
-	input			clk,			//	PIN04		(27MHz)
+	input			clk,			//	PIN04
 	input			clk14m,			//	PIN80
 	input			slot_reset_n,	//	PIN86
 	input			slot_iorq_n,	//	PIN18
@@ -48,9 +48,7 @@ module tangnano20k_vdp_cartridge (
 
 	//	HDMI
 	output			tmds_clk_p,		//	(PIN33/34)
-	output			tmds_clk_n,		//	dummy
 	output	[2:0]	tmds_d_p,		//	(PIN39/40), (PIN37/38), (PIN35/36)
-	output	[2:0]	tmds_d_n,		//	dummy
 
 	output			O_sdram_clk,
 	output			O_sdram_cke,
@@ -72,13 +70,12 @@ module tangnano20k_vdp_cartridge (
 	reg				ff_reset3_n0 = 1'b0;	/* synthesis syn_preserve = 1 */
 	reg				ff_reset3_n1 = 1'b0;	/* synthesis syn_preserve = 1 */
 	reg				ff_reset3_n2 = 1'b0;	/* synthesis syn_preserve = 1 */
-	wire			pll_lock215;
 	wire			pll_lock85;
-	wire			clk42m;				//	42.95454MHz
-	wire			clk42g;				//	42.95454MHz (geo3d engine: CLKOUTD of u_pll2 = clk85m / 2)
+	wire			clk42m;				//	42.95454MHz (geo3d engine: CLKOUTD of u_pll2 = clk85m / 2)
 	wire			clk85m;				//	85.90908MHz
 	wire			clk85m_n;			//	85.90908MHz (180deg phase shift)
-	wire			clk215m;			//	214.7727MHz
+	wire			clk143m;			//	143.18180MHz = clk14m x 10 (HDMI TMDS serializer)
+	wire			clk28m;				//	28.63636MHz = clk143m / 5 (HDMI pixel clock)
 	wire			reset_n;
 	wire			reset_n2;
 	wire			reset_n3;
@@ -124,6 +121,16 @@ module tangnano20k_vdp_cartridge (
 	wire	[7:0]	w_video_r;
 	wire	[7:0]	w_video_g;
 	wire	[7:0]	w_video_b;
+	wire			w_hdmi_de;
+	wire			w_hdmi_hs;
+	wire			w_hdmi_vs;
+	wire	[7:0]	w_hdmi_r;
+	wire	[7:0]	w_hdmi_g;
+	wire	[7:0]	w_hdmi_b;
+	wire			w_hdmi_overflow;
+	wire			w_hdmi_underflow;
+	wire			w_hdmi_input_error;
+	reg		[1:0]	ff_hdmi_error = 2'b00;
 
 	wire			w_pulse0;
 	wire			w_pulse1;
@@ -139,6 +146,9 @@ module tangnano20k_vdp_cartridge (
 	wire	[7:0]	w_green;
 	wire	[7:0]	w_blue;
 	wire			w_int_n;
+	wire			w_pcm_fs;
+	wire	[23:0]	w_pcm_l;
+	wire	[23:0]	w_pcm_r;
 
 	assign slot_wait		= w_sdram_init_busy;
 	assign oe_n				= 1'b0;
@@ -149,7 +159,7 @@ module tangnano20k_vdp_cartridge (
 		ff_reset_n2		<= ff_reset_n1;
 	end
 
-	always @( posedge clk42m ) begin
+	always @( posedge clk28m ) begin
 		ff_reset2_n0	<= slot_reset_n;
 		ff_reset2_n1	<= ff_reset2_n0;
 		ff_reset2_n2	<= ff_reset2_n1;
@@ -169,8 +179,7 @@ module tangnano20k_vdp_cartridge (
 	//	clock
 	// --------------------------------------------------------------------
 	Gowin_rPLL u_pll (
-		.clkout			( clk215m			),		//	output clkout	214.7727MHz
-		.lock			( pll_lock215		),
+		.clkout			( clk143m			),		//	output clkout	143.1818MHz
 		.clkin			( clk14m			)		//	input clkin		14.31818MHz
 	);
 
@@ -178,14 +187,14 @@ module tangnano20k_vdp_cartridge (
 		.clkout			( clk85m			),		//	output clkout	85.90908MHz
 		.lock			( pll_lock85		),
 		.clkoutp		( clk85m_n			),		//	output clkoutp	85.90908MHz (180deg phase shift)
-		.clkoutd		( clk42g			),		//	output clkoutd	42.95454MHz (CLKOUT / 2, geo3d engine only)
+		.clkoutd		( clk42m			),		//	output clkoutd	42.95454MHz (CLKOUT / 2, geo3d engine only)
 		.clkin			( clk14m			)		//	input clkin		14.31818MHz
     );
 
-	Gowin_CLKDIV u_clkdiv (
-		.clkout			( clk42m			),		//	output clkout	42.95454MHz
-		.hclkin			( clk85m			),		//	input hclkin	85.90908MHz
-		.resetn			( pll_lock85		)		//	input resetn
+	Gowin_CLKDIV your_instance_name(
+		.clkout			( clk28m			),		//	output clkout	28.63636MHz
+		.hclkin			( clk143m			),		//	input hclkin	143.1818MHz
+		.resetn			( 1'b1				)		//	input resetn
 	);
 
 	// --------------------------------------------------------------------
@@ -205,7 +214,7 @@ module tangnano20k_vdp_cartridge (
 		.int_n				( w_int_n					),
 		.bus_address		( w_bus_address				),
 		.bus_ioreq			( w_bus_ioreq				),
-		.bus_sysctrl_address ( w_bus_sysctrl_address		),
+		.bus_sysctrl_address ( w_bus_sysctrl_address	),
 		.bus_sysctrl_ioreq	( w_bus_sysctrl_ioreq		),
 		.bus_write			( w_bus_write				),
 		.bus_valid			( w_bus_valid				),
@@ -231,7 +240,7 @@ module tangnano20k_vdp_cartridge (
 
 	geo3d_bus u_geo3d (
 		.clk				( clk85m					),
-		.clk_eng			( clk42g					),
+		.clk_eng			( clk42m					),
 		.reset_n			( reset_n3					),
 		.bus_address		( w_bus_address				),
 		.bus_ioreq			( w_bus_ioreq				),
@@ -270,20 +279,20 @@ module tangnano20k_vdp_cartridge (
 		.bus_write			( w_bus_write				),
 		.bus_wdata			( w_bus_wdata				),
 		.bus_rdata			( w_bus_sysctrl_rdata		),
-		.bus_rdata_en		( w_bus_sysctrl_rdata_en		),
+		.bus_rdata_en		( w_bus_sysctrl_rdata_en	),
 		.rom_bus_address	( w_rom_bus_address			),
 		.rom_bus_valid		( w_rom_bus_valid			),
 		.rom_bus_ready		( w_rom_bus_ready			),
 		.rom_bus_write		( w_rom_bus_write			),
 		.rom_bus_wdata		( w_rom_bus_wdata			),
 		.rom_bus_rdata		( w_rom_bus_rdata			),
-		.rom_bus_rdata_en	( w_rom_bus_rdata_en			)
+		.rom_bus_rdata_en	( w_rom_bus_rdata_en		)
 	);
 
 	ip_spi_rom u_spi_rom (
 		.reset_n			( reset_n					),
 		.clk				( clk85m					),
-		.clk_serial			( clk215m					),
+		.clk_serial			( clk143m					),
 		.bus_cs				( 1'b1						),
 		.bus_address		( w_rom_bus_address			),
 		.bus_write			( w_rom_bus_write			),
@@ -291,7 +300,7 @@ module tangnano20k_vdp_cartridge (
 		.bus_ready			( w_rom_bus_ready			),
 		.bus_wdata			( w_rom_bus_wdata			),
 		.bus_rdata			( w_rom_bus_rdata			),
-		.bus_rdata_en		( w_rom_bus_rdata_en			),
+		.bus_rdata_en		( w_rom_bus_rdata_en		),
 		.stream_rdata		(							),
 		.stream_valid		(							),
 		.stream_ready		( 1'b0						),
@@ -355,21 +364,77 @@ module tangnano20k_vdp_cartridge (
 	// --------------------------------------------------------------------
 	//	HDMI
 	// --------------------------------------------------------------------
-	DVI_TX_Top u_dvi (
-		.I_rst_n			( reset_n2					),		//input I_rst_n
-		.I_serial_clk		( clk215m					),		//input I_serial_clk
-		.I_rgb_clk			( clk42m					),		//input I_rgb_clk
-		.I_rgb_vs			( w_video_vs				),		//input I_rgb_vs
-		.I_rgb_hs			( w_video_hs				),		//input I_rgb_hs
-		.I_rgb_de			( w_video_de				),		//input I_rgb_de
-		.I_rgb_r			( w_video_r					),		//input [7:0] I_rgb_r
-		.I_rgb_g			( w_video_g					),		//input [7:0] I_rgb_g
-		.I_rgb_b			( w_video_b					),		//input [7:0] I_rgb_b
-		.O_tmds_clk_p		( tmds_clk_p				),		//output O_tmds_clk_p
-		.O_tmds_clk_n		( tmds_clk_n				),		//output O_tmds_clk_n
-		.O_tmds_data_p		( tmds_d_p					),		//output [2:0] O_tmds_data_p
-		.O_tmds_data_n		( tmds_d_n					)		//output [2:0] O_tmds_data_n
+	hdmi_converter u_hdmi_converter (
+		.reset_n			( slot_reset_n & pll_lock85	),
+		.clk42m				( clk42m					),
+		.clk28m				( clk28m					),
+		.video_de			( w_video_de				),
+		.video_vs			( w_video_vs				),
+		.video_r			( w_video_r					),
+		.video_g			( w_video_g					),
+		.video_b			( w_video_b					),
+		.display_hs			( w_hdmi_hs					),
+		.display_vs			( w_hdmi_vs					),
+		.display_en			( w_hdmi_de					),
+		.display_r			( w_hdmi_r					),
+		.display_g			( w_hdmi_g					),
+		.display_b			( w_hdmi_b					),
+		.locked				(							),
+		.overflow			( w_hdmi_overflow			),
+		.underflow			( w_hdmi_underflow			),
+		.input_error		( w_hdmi_input_error			)
 	);
+
+	always @( posedge clk85m ) begin
+		if( !reset_n )
+			ff_hdmi_error <= 2'b00;
+		else
+			ff_hdmi_error <= { ff_hdmi_error[0],
+				w_hdmi_overflow | w_hdmi_underflow | w_hdmi_input_error };
+	end
+
+	hdmi_tx #(
+		.DEVICE_FAMILY		( ""						),
+		.CLOCK_FREQUENCY	( 28.63636					),		//	Input clock frequency (MHz)
+		.ENCODE_MODE		( "HDMI"					),		//	HDMI
+		.USE_EXTCONTROL		( "OFF"						),		//	Generate HDMI preamble/guardband from active
+		.SYNC_POLARITY		( "NEGATIVE"				),		//	Invert HSYNC/VSYNC to send
+		.SCANMODE			( "AUTO"					),		//	Displays decides
+		.PICTUREASPECT		( "NONE"					),		//	Picture aspect ratio information not present
+		.FORMATASPECT		( "AUTO"					),		//	Same as picture
+		.PICTURESCALING		( "FIT"						),		//	Picture has been scaled H and V
+		.COLORSPACE			( "RGB"						),		//	RGB888 (Fixed at Full range)
+		.YCC_DATARANGE		( "LIMITED"					),		//	Limited data range(16-235,240)
+		.CONTENTTYPE		( "GRAPHICS"				),		//	for PC use(IT Content)
+		.REPETITION			( 0							),		//	Pixel Repetition Factor (0-9)
+		.VIDEO_CODE			( 0							),		//	Video Information Codes (1-59, 0=No data)
+		.USE_AUDIO_PACKET	( "ON"						),		//	Use Audio sample packet
+		.AUDIO_FREQUENCY	( 48.0						),		//	Audio sampling frequency (KHz)
+		.PCMFIFO_DEPTH		( 8							),		//	Sample data fifo depth : 8=256word(35sample)
+		.CATEGORY_CODE		( 8'h00						)
+	) u_hdmi_tx (
+		.reset				( ~reset_n2					),		//	active high
+		.clk				( clk28m					),		//	28.63636MHz pixel clock
+		.clk_x5				( clk143m					),		//	143.18180MHz = 5 * 28.63636MHz
+		.cc_swap			( 							),		//	Type-C AltMode swap option
+		.control			( 4'd0						),		//	HDMI control from video_syncgen
+		.active				( w_hdmi_de					),		//	Pixel data active
+		.r_data				( w_hdmi_r					),		//	R
+		.g_data				( w_hdmi_g					),		//	G
+		.b_data				( w_hdmi_b					),		//	B
+		.hsync				( w_hdmi_hs					),		//	Horizontal sync
+		.vsync				( w_hdmi_vs					),		//	Vertical sync
+		.pcm_fs				( w_pcm_fs					),		//	sound
+		.pcm_l				( w_pcm_l					),		//	sound
+		.pcm_r				( w_pcm_r					),		//	sound
+		.data				( tmds_d_p					),		//	TMDS data
+		.data_n				( 							),		//	unused: LVDS25 output by CST
+		.clock				( tmds_clk_p				),		//	TMDS clock
+		.clock_n			( 							)		//	unused: LVDS25 output by CST
+	);
+	assign w_pcm_fs = 1'b0;
+	assign w_pcm_l	= 24'd0;
+	assign w_pcm_r	= 24'd0;
 
 	// --------------------------------------------------------------------
 	//	SDRAM
@@ -407,11 +472,11 @@ module tangnano20k_vdp_cartridge (
 	ip_ws2812_led u_led (
 		.reset_n			( reset_n					),
 		.clk				( clk85m					),
-		.wr					( w_wr						),
+		.wr					( w_wr | (ff_hdmi_error[1] & ~w_sending) ),
 		.sending			( w_sending					),
-		.red				( w_red						),
-		.green				( w_green					),
-		.blue				( w_blue					),
+		.red				( ff_hdmi_error[1] ? 8'hFF : w_red	),
+		.green				( ff_hdmi_error[1] ? 8'h00 : w_green	),
+		.blue				( ff_hdmi_error[1] ? 8'h00 : w_blue	),
 		.ws2812_led			( ws2812_led				)
 	);
 

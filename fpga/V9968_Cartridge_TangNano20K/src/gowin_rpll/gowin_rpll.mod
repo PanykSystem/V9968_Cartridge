@@ -7,15 +7,16 @@
 
 -mod_name Gowin_rPLL
 -file_name gowin_rpll
--path D:/github/HRA_product/TangCartMSX/RTL/tangnano20k_vdp_cartridge_step3/src/gowin_rpll/
+-path C:/Users/hra/Documents/github/HRA_product/V9968_Cartridge/labo/V9968_Cartridge_TangNano20K/src/gowin_rpll/
 -type PLL
 -rPll true
 -file_type vlg
+-ip_version 1.0
 -dev_type GW2AR-18C
 -dyn_idiv_sel false
 -idiv_sel 1
 -dyn_fbdiv_sel false
--fbdiv_sel 15
+-fbdiv_sel 10
 -dyn_odiv_sel false
 -odiv_sel 4
 -dyn_da_en true
@@ -23,7 +24,7 @@
 -rst_sig_p false
 -fclkin 14.318
 -clkfb_sel 0
--en_lock true
+-en_lock false
 -clkout_bypass false
 -clkout_ft_dir 1
 -en_clkoutp false

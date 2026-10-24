@@ -1,106 +1,156 @@
 GowinSynthesis start
 Running parser ...
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\debugger\ip_debugger.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\dvi_tx\dvi_tx.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_bus.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_z80if.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_clkdiv\gowin_clkdiv.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll\gowin_rpll.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll2\gowin_rpll2.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\msx_slot\msx_slot.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\spi_rom\ip_spi_rom.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\ram\ip_ram.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\sdram\ip_sdram_tangnano20k_c.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp.v'
-Undeclared symbol 'w_vram_interleave', assumed default net type 'wire'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp.v":362)
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_command.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_cpu_interface.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_divide_table.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_info_collect.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_makeup_pixel.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_select_visible_planes.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_screen_mode.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_sprite.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_ssg.v'
-Undeclared symbol 'dot_phase', assumed default net type 'wire'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_ssg.v":450)
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan_line_buffer.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_double_buffer.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out.v'
-Undeclared symbol 'w_display_en', assumed default net type 'wire'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out.v":380)
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out_bilinear.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_vram_interface.v'
-Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\ws2812_led\ip_ws2812_led.v'
-Compiling module 'tangnano20k_vdp_cartridge'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":24)
-Compiling module 'Gowin_rPLL'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll\gowin_rpll.v":10)
-Compiling module 'Gowin_rPLL2'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_rpll2\gowin_rpll2.v":10)
-Compiling module 'Gowin_CLKDIV'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\gowin_clkdiv\gowin_clkdiv.v":10)
-Compiling module 'msx_slot'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\msx_slot\msx_slot.v":58)
-Compiling module 'geo3d_bus'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_bus.v":27)
-Compiling module 'geo3d_engine'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":138)
-Extracting RAM for identifier 'vmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":188)
-Extracting RAM for identifier 'emem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":189)
-Extracting RAM for identifier 'pmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":190)
-Extracting RAM for identifier 'fmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":212)
-Extracting RAM for identifier 'smem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":213)
-Extracting RAM for identifier 'tmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":214)
-Extracting RAM for identifier 'msh'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":259)
-Compiling module 'geo3d_core'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":39)
-Extracting RAM for identifier 'm'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":54)
-WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":129)
-WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":130)
-WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":131)
-WARN  (EX3791) : Expression size 36 truncated to fit in target size 18("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":1224)
-Compiling module 'system_controller'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v":58)
-Extracting RAM for identifier 'ff_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v":138)
-Compiling module 'ip_spi_rom'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\spi_rom\ip_spi_rom.v":27)
-Compiling module 'vdp'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp.v":58)
-Compiling module 'vdp_cpu_interface'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_cpu_interface.v":58)
-Compiling module 'vdp_timing_control'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control.v":57)
-Compiling module 'vdp_timing_control_ssg'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_ssg.v":58)
-Compiling module 'vdp_timing_control_screen_mode'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_screen_mode.v":58)
-Compiling module 'vdp_timing_control_sprite'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_sprite.v":58)
-Compiling module 'vdp_sprite_select_visible_planes'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_select_visible_planes.v":58)
-Compiling module 'vdp_sprite_info_collect'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_info_collect.v":58)
-Compiling module 'vdp_sprite_makeup_pixel'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_makeup_pixel.v":58)
-Compiling module 'vdp_sprite_divide_table'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_divide_table.v":58)
-Compiling module 'vdp_command'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_command.v":57)
-Compiling module 'vdp_command_cache'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v":57)
-Extracting RAM for identifier 'ff_data'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v":97)
-Extracting RAM for identifier 'ff_mask'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v":98)
-Compiling module 'vdp_vram_interface'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_vram_interface.v":58)
-Compiling module 'vdp_color_palette'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette.v":58)
-Compiling module 'vdp_color_palette_ram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":58)
-Extracting RAM for identifier 'ram_r'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":73)
-Extracting RAM for identifier 'ram_g'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":74)
-Extracting RAM for identifier 'ram_b'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":75)
-Compiling module 'vdp_upscan'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan.v":60)
-Compiling module 'vdp_upscan_line_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan_line_buffer.v":58)
-Extracting RAM for identifier 'ff_imem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan_line_buffer.v":66)
-Compiling module 'vdp_video_out'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out.v":60)
-Compiling module 'vdp_video_double_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_double_buffer.v":58)
-Compiling module 'vdp_video_ram_line_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v":58)
-Extracting RAM for identifier 'ff_imem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v":66)
-Compiling module 'vdp_video_out_bilinear'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out_bilinear.v":60)
-Compiling module 'DVI_TX_Top'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\dvi_tx\dvi_tx.v":1072)
-Compiling module '**'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\dvi_tx\dvi_tx.v":1071)
-Compiling module 'ip_sdram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\sdram\ip_sdram_tangnano20k_c.v":57)
-WARN  (EX3791) : Expression size 32 truncated to fit in target size 15("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\sdram\ip_sdram_tangnano20k_c.v":285)
-Compiling module 'ip_ws2812_led'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\ws2812_led\ip_ws2812_led.v":57)
-Compiling module 'ip_debugger'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\debugger\ip_debugger.v":57)
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\debugger\ip_debugger.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_converter\hdmi_converter.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_bus.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_z80if.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\gowin_clkdiv\gowin_clkdiv.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\gowin_rpll\gowin_rpll.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\gowin_rpll2\gowin_rpll2.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\msx_slot\msx_slot.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\ram\ip_ram.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\sdram\ip_sdram_tangnano20k_c.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\spi_rom\ip_spi_rom.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp.v'
+Undeclared symbol 'w_vram_interleave', assumed default net type 'wire'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp.v":362)
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_command.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_cpu_interface.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_divide_table.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_info_collect.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_makeup_pixel.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_select_visible_planes.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_screen_mode.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_sprite.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_ssg.v'
+Undeclared symbol 'dot_phase', assumed default net type 'wire'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_ssg.v":450)
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan_line_buffer.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_double_buffer.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out.v'
+Undeclared symbol 'w_display_en', assumed default net type 'wire'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out.v":382)
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out_bilinear.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_vram_interface.v'
+Analyzing Verilog file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\ws2812_led\ip_ws2812_led.v'
+Analyzing VHDL file 'C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd'
+Analyzing entity 'hdmi_tx_scfifo'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":126)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":147)
+Analyzing entity 'hdmi_tx_delay'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":235)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":250)
+Analyzing entity 'hdmi_tx_audiopacket_submodule'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":291)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":317)
+Analyzing entity 'hdmi_tx_infopacket_submodule'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":544)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":603)
+Analyzing entity 'hdmi_tx_dataisland_submodule'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":840)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":863)
+Analyzing entity 'hdmi_tx_tmds_encoder_submodule'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1037)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1058)
+Analyzing entity 'hdmi_tx_pdiff_submodule'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1249)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1269)
+Analyzing entity 'hdmi_tx'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1397)
+Analyzing architecture 'rtl'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1473)
+Compiling module 'tangnano20k_vdp_cartridge'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":24)
+Compiling module 'Gowin_rPLL'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\gowin_rpll\gowin_rpll.v":11)
+Compiling module 'Gowin_rPLL2'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\gowin_rpll2\gowin_rpll2.v":10)
+Compiling module 'Gowin_CLKDIV'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\gowin_clkdiv\gowin_clkdiv.v":11)
+Compiling module 'msx_slot'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\msx_slot\msx_slot.v":58)
+Compiling module 'geo3d_bus'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_bus.v":27)
+Compiling module 'geo3d_engine'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":138)
+Extracting RAM for identifier 'vmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":188)
+Extracting RAM for identifier 'emem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":189)
+Extracting RAM for identifier 'pmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":190)
+Extracting RAM for identifier 'fmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":212)
+Extracting RAM for identifier 'smem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":213)
+Extracting RAM for identifier 'tmem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":214)
+Extracting RAM for identifier 'msh'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":259)
+Compiling module 'geo3d_core'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":39)
+Extracting RAM for identifier 'm'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":54)
+WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":129)
+WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":130)
+WARN  (EX3791) : Expression size 34 truncated to fit in target size 21("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_core.v":131)
+WARN  (EX3791) : Expression size 36 truncated to fit in target size 18("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\geo3d\geo3d_engine.v":1224)
+Compiling module 'system_controller'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v":58)
+Extracting RAM for identifier 'ff_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\system_controller\system_controller.v":138)
+Compiling module 'ip_spi_rom'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\spi_rom\ip_spi_rom.v":27)
+Compiling module 'vdp'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp.v":58)
+Compiling module 'vdp_cpu_interface'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_cpu_interface.v":58)
+Compiling module 'vdp_timing_control'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control.v":57)
+Compiling module 'vdp_timing_control_ssg'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_ssg.v":58)
+Compiling module 'vdp_timing_control_screen_mode'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_screen_mode.v":58)
+Compiling module 'vdp_timing_control_sprite'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_timing_control_sprite.v":58)
+Compiling module 'vdp_sprite_select_visible_planes'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_select_visible_planes.v":58)
+Compiling module 'vdp_sprite_info_collect'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_info_collect.v":58)
+Compiling module 'vdp_sprite_makeup_pixel'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_makeup_pixel.v":58)
+Compiling module 'vdp_sprite_divide_table'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_sprite_divide_table.v":58)
+Compiling module 'vdp_command'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_command.v":57)
+Compiling module 'vdp_command_cache'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v":57)
+Extracting RAM for identifier 'ff_data'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v":97)
+Extracting RAM for identifier 'ff_mask'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_command_cache.v":98)
+Compiling module 'vdp_vram_interface'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_vram_interface.v":58)
+Compiling module 'vdp_color_palette'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette.v":58)
+Compiling module 'vdp_color_palette_ram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":58)
+Extracting RAM for identifier 'ram_r'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":73)
+Extracting RAM for identifier 'ram_g'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":74)
+Extracting RAM for identifier 'ram_b'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_color_palette_ram.v":75)
+Compiling module 'vdp_upscan'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan.v":60)
+Compiling module 'vdp_upscan_line_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan_line_buffer.v":58)
+Extracting RAM for identifier 'ff_imem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_upscan_line_buffer.v":66)
+Compiling module 'vdp_video_out'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out.v":60)
+Compiling module 'vdp_video_double_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_double_buffer.v":58)
+Compiling module 'vdp_video_ram_line_buffer'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v":58)
+Extracting RAM for identifier 'ff_imem'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_ram_line_buffer.v":66)
+Compiling module 'vdp_video_out_bilinear'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\v9968\vdp_video_out_bilinear.v":60)
+Compiling module 'hdmi_converter'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_converter\hdmi_converter.v":1)
+Extracting RAM for identifier 'line_ram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_converter\hdmi_converter.v":66)
+Switching to VHDL mode to elaborate design unit 'hdmi_tx'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":434)
+Processing 'hdmi_tx(device_family="",clock_frequency=28.63636,audio_frequency=48.0)(1,0)(1,4)(1,3)(1,8)(1,4)(1,4)(1,4)(1,3)(1,3)(1,7)(1,8)(1,2)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1397)
+WARN  (EX4196) : Comparison between unequal length arrays always returns TRUE, left argument length 3 is different from right argument length 2 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1528)
+Processing 'hdmi_tx_delay(data_bitwidth=26,delay_distance=60)(1,4)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":235)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 2 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1555)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 4 is different from right argument length 3 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1559)
+Processing 'hdmi_tx_audiopacket_submodule(audio_frequency=48.0)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":291)
+Processing 'hdmi_tx_scfifo(fifo_word_width=8,fifo_data_width=9)(1,4)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":126)
+Extracting RAM for identifier 'ram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":154)
+Processing 'hdmi_tx_infopacket_submodule(clock_frequency=28.63636,audio_frequency=48.0)(1,4)(1,4)(1,4)(1,3)(1,3)(1,7)(1,8)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":544)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 4 is different from right argument length 5 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":658)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 4 is different from right argument length 3 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":660)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 6 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":662)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 5 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":662)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 4 is different from right argument length 3 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":665)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 5 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":668)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 5 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":668)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 8 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":668)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 8 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":668)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 3 is different from right argument length 8 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":669)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 8 is different from right argument length 5 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":674)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 8 is different from right argument length 6 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":674)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 8 is different from right argument length 4 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":674)
+WARN  (EX1998) : Net 'infotable_sig[6][7]' does not have a driver("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":691)
+Processing 'hdmi_tx_dataisland_submodule(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":840)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 4 is different from right argument length 8 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1692)
+WARN  (EX4196) : Comparison between unequal length arrays always returns FALSE, left argument length 4 is different from right argument length 3 for 'string' array("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1738)
+Processing 'hdmi_tx_tmds_encoder_submodule(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1037)
+Processing 'hdmi_tx_tmds_encoder_submodule(tmds_channel=1)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1037)
+Processing 'hdmi_tx_tmds_encoder_submodule(tmds_channel=2)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1037)
+Processing 'hdmi_tx_pdiff_submodule(device_family="")(1,0)(RTL)'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\hdmi_tx\src\hdmi_tx_gw_patched.vhd":1249)
+Returning to Verilog mode to proceed with elaboration("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":434)
+Compiling module 'ip_sdram'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\sdram\ip_sdram_tangnano20k_c.v":57)
+WARN  (EX3791) : Expression size 32 truncated to fit in target size 15("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\sdram\ip_sdram_tangnano20k_c.v":285)
+Compiling module 'ip_ws2812_led'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\ws2812_led\ip_ws2812_led.v":57)
+Compiling module 'ip_debugger'("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\debugger\ip_debugger.v":57)
+WARN  (EX2565) : Input 'cc_swap' on this instance is undriven. Assigning to 0, simulation mismatch possible. Please assign the input or remove the declaration("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":415)
 NOTE  (EX0101) : Current top module is "tangnano20k_vdp_cartridge"
 [5%] Running netlist conversion ...
-WARN  (CV0016) : Input clk is unused("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":25)
-WARN  (CV0018) : Input button[1] is unused("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":39)
+WARN  (CV0016) : Input clk is unused("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":25)
+WARN  (CV0018) : Input button[1] is unused("C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\src\tangnano20k_vdp_cartridge.v":39)
 Running device independent optimization ...
 [10%] Optimizing Phase 0 completed
 [15%] Optimizing Phase 1 completed
@@ -116,6 +166,6 @@ Running technical mapping ...
 [75%] Tech-Mapping Phase 2 completed
 [80%] Tech-Mapping Phase 3 completed
 [90%] Tech-Mapping Phase 4 completed
-[95%] Generate netlist file "C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\impl\gwsynthesis\tangnano20k_vdp_cartridge.vg" completed
-[100%] Generate report file "C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\fpga\V9968_Cartridge_TangNano20K\impl\gwsynthesis\tangnano20k_vdp_cartridge_syn.rpt.html" completed
+[95%] Generate netlist file "C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\impl\gwsynthesis\tangnano20k_vdp_cartridge.vg" completed
+[100%] Generate report file "C:\Users\hra\Documents\github\HRA_product\V9968_Cartridge\labo\V9968_Cartridge_TangNano20K\impl\gwsynthesis\tangnano20k_vdp_cartridge_syn.rpt.html" completed
 GowinSynthesis finish
